@@ -1,6 +1,5 @@
 import * as z from "zod";
 
-
 export const signUpSchema = z.object({
     name: z.string().min(1, {
       message: "Введите имя.",
@@ -21,7 +20,6 @@ export const signUpSchema = z.object({
     phoneNumber: z.string().length(11, {
       message: "Введите номер телефона.",
     }),
-    role: z.string().default("GUEST"),
     email: z.string().email({
         message: "Введите email.",
     }),
