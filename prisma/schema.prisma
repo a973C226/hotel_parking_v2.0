@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  GUEST
+  BUSiNESS_USER
+}
+
+enum BookingStatus {
+  CREATED
+  PAID
+  CANCELED
+  ARCHIVED
+}
+
+enum PaymentStatus {
+  CREATED
+  PAID
+  CANCELED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  lastname      String
+  middlename    String?
+  username      String?
+  birthdate     DateTime
+  gender        String
+  phoneNumber   String
+  role          UserRole @default(GUEST)
+  email         String   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String
+  transports    Transport[]
+  booking       Booking[]
+}
+
+model VerificationToken {
+  id      String @id @default(cuid())
+  email   String
+  token   String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Transport {
+  id            String @id @default(cuid())
+  licensePlate String
+  owner         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  brand         String?
+  model         String?
+  color         String? 
+}
+
+model Parking {
+  id              String @id @default(cuid())
+  parkingSpaces  Int
+  quotasNumber   Int
+  pricePerQuota Decimal @db.Money
+  freeQuotas  FreeQuotas?
+}
+
+model FreeQuotas {
+  id                String @id @default(cuid())
+  parking           Parking @relation(fields: [parkingId], references: [id])
+  parkingId         String @unique
+  dateActiveQoutas  DateTime
+  freeQuotasNumber  Int
+}
+
+model Booking {
+  id              String @id @default(cuid())
+  status          BookingStatus @default(CREATED)
+  createdAt       DateTime @default(now())
+  bookingStart    DateTime
+  bookingEnd      DateTime
+  bookingQuotas   Int
+  paymentStatus   PaymentStatus @default(CREATED)
+  user            User @relation(fields: [userId], references: [id])
+  userId          String
+}
