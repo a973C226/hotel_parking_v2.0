@@ -7,34 +7,44 @@ import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
 
-export const register = async (values: z.infer<typeof signUpSchema>) => {
-    const validatedFields = signUpSchema.safeParse(values);
+export const signUpAction = async (validatedFields: z.infer<typeof signUpSchema>): Promise<{
+    success: boolean;
+    result: any;
+}> => {
+    
+    const email = validatedFields.email;
 
-    if (!validatedFields.success) {
-        logger.log({
-            level: "error",
-            message: validatedFields.error.message,
-        });
-        return { success: false, error: validatedFields.error };
-    }
-
-    const email = validatedFields.data.email;
-
-    const password = validatedFields.data.password;
+    const password = validatedFields.password;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-        return { success: false, error: "Email уже используется!" };
+        logger.log({
+            level: "error",
+            message: "email уже используется",
+        });
+        return { success: false, result: "Email уже используется!" };
     }
 
-    const user = await db.user.create({
-        data: {
-            ...validatedFields.data,
-            password: hashedPassword,
-        },
-    });
-
-    return { success: user };
+    try {
+        const user = await db.user.create({
+            data: {
+                ...validatedFields,
+                password: hashedPassword,
+            },
+        });
+        logger.log({
+            level: "debug",
+            message: `создание пользователя: ${ user.id }`,
+        });
+        return { success: true, result: user };
+    }
+    catch (err) {
+        logger.log({
+            level: "error",
+            message: `ошибка при создании пользователя: ${ err }`,
+        });
+        return { success: false, result: err };
+    }
 };
