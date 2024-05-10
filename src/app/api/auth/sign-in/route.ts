@@ -29,7 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             return new NextResponse(
                 JSON.stringify({ message: `ошибка авторизации` }), 
                 {
-                    status: statusCode.StatusBadRequest, 
+                    status: statusCode.StatusAuthorizationError, 
                     headers: { "Content-Type": "application/json" }
                 },
             );

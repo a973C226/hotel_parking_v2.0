@@ -9,6 +9,10 @@ import { signUpSchema } from "@/lib/validations/signUpSchema";
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
         const body = await request.json();
+        logger.log({
+            level: "info",
+            message: JSON.stringify(body),
+        })
         const validatedFields = signUpSchema.safeParse(body);
         if (!validatedFields.success) {
             logger.log({
@@ -23,14 +27,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 },
             );
         }
-
+        
         const signUpResult = await signUpAction(validatedFields.data);
 
         if (!signUpResult.success) {
             return new NextResponse(
-                JSON.stringify({ message: `ошибка регистрации` }), 
+                JSON.stringify({ 
+                    message: `ошибка регистрации`,
+                    details: signUpResult.result
+                 }), 
                 {
-                    status: statusCode.StatusInternalServerError, 
+                    status: statusCode.StatusRegistrationError, 
                     headers: { "Content-Type": "application/json" }
                 },
             )
@@ -72,7 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return new NextResponse(
             JSON.stringify({ message: `Что-то пошло не так: ${ error }` }), 
             { 
-                status: statusCode.StatusUnknownError,
+                status: statusCode.StatusInternalServerError,
                 headers: { "Content-Type": "application/json" } 
             }
         );

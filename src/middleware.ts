@@ -13,20 +13,20 @@ export async function middleware(request: NextRequest) {
     if (isPublicRoute || isAuthRoute) {
         return NextResponse.next();
     }
-    const { isAuth, userRole } = await isAuthenticated(request);
-    if (!isAuth || !userRole) {
-        return;
-    }
-    switch (userRole) {
-        case "ADMIN":
-            const isAdminRoute = adminRoutes.includes(req_url);
-            return NextResponse.next();
-        case "BUSiNESS_USER":
-            const isBusinessUserRoute = businessUserRoutes.includes(req_url);
-            return NextResponse.next();
-        default:
-            return NextResponse.next();
-    }
+    // const { isAuth, userRole } = await isAuthenticated(request);
+    // if (!isAuth || !userRole) {
+    //     return;
+    // }
+    // switch (userRole) {
+    //     case "ADMIN":
+    //         const isAdminRoute = adminRoutes.includes(req_url);
+    //         return NextResponse.next();
+    //     case "BUSiNESS_USER":
+    //         const isBusinessUserRoute = businessUserRoutes.includes(req_url);
+    //         return NextResponse.next();
+    //     default:
+    //         return NextResponse.next();
+    // }
     return;
 }
  

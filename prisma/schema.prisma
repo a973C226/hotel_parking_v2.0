@@ -31,12 +31,12 @@ enum PaymentStatus {
 
 model User {
 	id            String    @id @default(cuid())
-	name          String
-	lastname      String
+	name          String?
+	lastname      String?
 	middlename    String?
-	username      String?
-	birthdate     DateTime
-	gender        String
+	username      String? @unique
+	birthdate     DateTime?
+	gender        String?
 	phoneNumber   String
 	role          UserRole @default(GUEST)
 	email         String   @unique
