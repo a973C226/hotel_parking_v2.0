@@ -1,15 +1,19 @@
 import { NextResponse, NextRequest } from "next/server";
-import { signInAction } from "@/lib/actions/auth/signInAction";
+import { refreshTokenAction } from "@/lib/actions/auth/refreshTokenAction";
 import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerificationEmailToken";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
-import { signInSchema } from "@/lib/validations/signInSchema";
+import { refreshTokenSchema } from "@/lib/validations/refreshTokenSchema";
 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
         const body = await request.json();
-        const validatedFields = signInSchema.safeParse(body);
+        logger.log({
+            level: "info",
+            message: JSON.stringify(body),
+        })
+        const validatedFields = refreshTokenSchema.safeParse(body);
         if (!validatedFields.success) {
             logger.log({
                 level: "error",
@@ -24,8 +28,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        const signInResult = await signInAction(validatedFields.data);
-        if (!signInResult.success) {
+        const refreshTokenResult = await refreshTokenAction(validatedFields.data);
+        if (!refreshTokenResult.success) {
             return new NextResponse(
                 JSON.stringify({ message: `ошибка авторизации` }), 
                 {
@@ -36,11 +40,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
         const response = new NextResponse(
             JSON.stringify({ 
-                message: `успешная авторизация`,
-                access_token: signInResult.result.accessToken.token,
-                access_token_expires: signInResult.result.accessToken.expires,
-                refresh_token: signInResult.result.refreshToken.token,
-                refresh_token_expires: signInResult.result.refreshToken.expires
+                message: `токен обновлен`,
+                access_token: refreshTokenResult.result.accessToken.token,
+                access_token_expires: refreshTokenResult.result.accessToken.expires,
+                refresh_token: refreshTokenResult.result.refreshToken.token,
+                refresh_token_expires: refreshTokenResult.result.refreshToken.expires
              }), 
             {
                 status: statusCode.StatusOK, 
@@ -56,7 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(
             { error: `Что-то пошло не так: ${ error }` }, 
             { 
-                status: statusCode.StatusUnknownError,
+                status: statusCode.StatusBadRequest,
                 headers: { "Content-Type": "application/json" } 
             }
         );

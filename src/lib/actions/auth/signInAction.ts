@@ -3,11 +3,11 @@
 import bcrypt from "bcrypt";
 import * as z from "zod";
 import { signInSchema } from "@/lib/validations/signInSchema"
-import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
-import jwt from 'jsonwebtoken';
-import { generateRefreshToken } from "@/lib/utils/generateRefreshToken";
+import * as jose from 'jose';
+import { generateJwtToken } from "@/lib/utils/generateJwtToken";
+import { getAlgorithm, getSecretKey } from "@/lib/utils/jwtConfig";
 
 export const signInAction = async (validatedFields: z.infer<typeof signInSchema>): Promise<{
     success: boolean;
@@ -29,31 +29,28 @@ export const signInAction = async (validatedFields: z.infer<typeof signInSchema>
     if (!isPasswordCorrect) {
         return { success: false, result: "wrong password" };
     }
-    const secret_key = process.env.JWT_SECRET_KEY;
-    if (!secret_key) {
-        logger.log({
-            level: "error",
-            message: "secret key not found",
-        });
-        return { success: false, result: "JWT_SECRET_KEY is not defined" };
-    }
+
     try {
-        const token = jwt.sign(
-            {id: existingUser.id},
-            secret_key, 
-            { expiresIn: '1h' }
-        );
-        logger.log({
-            level: "info",
-            message: `создание jwt токена ${ token }`,
-        });
-        generateRefreshToken(token);
-        return { success: true, result: token }
+        const payload = { id: existingUser.id, role: existingUser.role };
+        const accessToken = await generateJwtToken(payload, "2h");
+        const refreshToken = await generateJwtToken(payload, "2d");
+        const result = {
+            accessToken: {
+                token: accessToken,
+                expires: 7200000, // 2h
+            },
+            refreshToken: {
+                token: refreshToken,
+                expires: 172800000, // 2d
+            },
+        }
+        
+        return { success: true, result: result };
     }
     catch (err) {
         logger.log({
             level: "error",
-            message: `ошибка при создании jwt токена: ${ err }`,
+            message: `[signInAction] error: ${ err }`,
         });
         return { success: false, result: null };
     }
