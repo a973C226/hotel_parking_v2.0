@@ -4,7 +4,7 @@ import { User } from "@prisma/client";
 
 export const getUserByUsername = async (username: string): Promise<User | null> => {
 	try {
-		const user = await db.user.findUnique({ where: { username } });
+		const user = await db.user.findFirst({ where: { username: username } });
 		if (!user) {
 			return null;
 		}
@@ -18,7 +18,7 @@ export const getUserByUsername = async (username: string): Promise<User | null> 
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
 	try {
-		const user = await db.user.findUnique({ where: { email } });
+		const user = await db.user.findUnique({ where: { email: email } });
 		if (!user) {
 			return null;
 		}
@@ -32,9 +32,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 
 export const getUserByID = async (userID: string): Promise<User | null> => {
 	try {
-		console.log(userID);
         const user = await db.user.findUnique({ where: { id: userID } });
-		console.log(user);
 		if (!user) {
 			return null;
 		}
@@ -42,7 +40,6 @@ export const getUserByID = async (userID: string): Promise<User | null> => {
         return user;
     } 
     catch(err) {
-		console.log(err);
         return null;
     }
 };

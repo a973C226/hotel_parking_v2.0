@@ -12,6 +12,7 @@ export const statusCode = {
     StatusConflict: 409,
     StatusAuthorizationError: 422,
     StatusRegistrationError: 423,
+    StatusConfirmationError: 424,
     StatusTooManyRequests: 429,
     StatusInternalServerError: 500,
     StatusNotImplemented: 501,

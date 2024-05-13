@@ -1,64 +1,51 @@
 "use server";
 
 import bcrypt from "bcrypt";
+
 import * as z from "zod";
 import { signUpSchema } from "@/lib/validations/signUpSchema"
 import { db } from "@/lib/db";
 import { getUserByEmail, getUserByUsername } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
+import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerificationEmailToken";
 
-export const signUpAction = async (validatedFields: z.infer<typeof signUpSchema>): Promise<{
+type NewUser = {
+    email: string,
+    password: string
+}
+
+export const signUpAction = async (body: NewUser): Promise<{
     success: boolean;
     result: any;
 }> => {
     
-    const email = validatedFields.email;
-    const username = validatedFields.username;
+    const email = body.email;
 
-    const password = validatedFields.password;
+    const password = body.password;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const existingUserByEmail = await getUserByEmail(email);
-    const existingUserByUsername = await getUserByUsername(username);
 
-    if (existingUserByEmail || existingUserByUsername) {
-        logger.log({
-            level: "error",
-            message: "[signUpAction] error: email уже используется",
-        });
-        return { success: false, result: {email: existingUserByEmail ? false : true, username: existingUserByUsername ? false : true} };
+    if (existingUserByEmail) {
+        return { success: false, result: "Email уже используется" };
     }
-
-    
-
-    if (existingUserByUsername) {
-        logger.log({
-            level: "error",
-            message: "[signUpAction] error: username уже используется",
-        });
-        return { success: false, result: "username уже используется" };
-    }
-
-    
 
     try {
         const user = await db.user.create({
             data: {
-                ...validatedFields,
+                email: email,
                 password: hashedPassword,
             },
         });
-        logger.log({
-            level: "debug",
-            message: `создание пользователя: ${ user.id }`,
-        });
-        return { success: true, result: user };
+        sendVerificationEmailToken(user.email)
+
+        return { success: true, result: "Аккаунт успешно создан!" };
     }
     catch (err) {
         logger.log({
             level: "error",
-            message: `[signUpAction] error: ошибка при создании пользователя: ${ err }`,
+            message: `[signUpAction] ошибка при создании пользователя: ${ err }`,
         });
-        return { success: false, result: err };
+        return { success: false, result: "Ошибка! Обратитесь в техподдержку." };
     }
 };

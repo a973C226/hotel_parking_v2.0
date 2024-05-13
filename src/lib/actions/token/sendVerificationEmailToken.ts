@@ -14,7 +14,7 @@ export const sendVerificationEmailToken = async (email: string): Promise<{
         return { success: false, result: null };
     }
 
-    const confirmLink = `${ domain }/api/auth/newVerification?token=${ token }`;
+    const confirmLink = `${ domain }/auth/confirm-email`;
 
     const smtpOptions = {
         host: process.env.SMTP_HOST || "",
@@ -34,19 +34,18 @@ export const sendVerificationEmailToken = async (email: string): Promise<{
         await transporter.sendMail({
             from: process.env.SMTP_USER,
             to: email,
-            subject: "Welcome to NextAPI",
-            html: `<p>Click <a href="${ confirmLink }">here</a> to confirm email.</p>`
+            subject: "Добро пожаловать!",
+            html: `
+                Код подтверждения: ${ token }
+                <p><a href="${ confirmLink }">Ссылка</a> для подтверждения почты.</p>
+            `
         })
-        logger.log({
-            level: "debug",
-            message: `отправление токена подтверждения почты: ${ token }`,
-        });
         return { success: true, result: null }
     }
     catch (err) {
         logger.log({
             level: "error",
-            message: `ошибка при отправке токена подтверждения почты: ${ err }`,
+            message: `[sendVerificationEmailToken] ошибка при отправке токена подтверждения почты: ${ err }`,
         });
         return { success: false, result: null };
     }

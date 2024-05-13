@@ -8,50 +8,63 @@ import { logger } from "@/lib/logger";
 import * as jose from 'jose';
 import { generateJwtToken } from "@/lib/utils/generateJwtToken";
 import { getAlgorithm, getSecretKey } from "@/lib/utils/jwtConfig";
+import { db } from "@/lib/db";
 
-export const signInAction = async (validatedFields: z.infer<typeof signInSchema>): Promise<{
+type User = {
+    email: string,
+    password: string
+}
+
+export const signInAction = async (body: User): Promise<{
     success: boolean;
     result: any;
 }> => {
-    const email = validatedFields.email;
-    const password = validatedFields.password;
+    const email = body.email
+    const password = body.password
 
-    const existingUser = await getUserByEmail(email);
+    const existingUser = await getUserByEmail(email)
 
     if (!existingUser) {
-        return { success: false, result: "user not found" };
+        return { success: false, result: "Пользователь с таким email не найден!" }
     }
     if (!existingUser.emailVerified) {
-        return { success: false, result: "email not verified" };
+        return { success: false, result: "Почта не подтверждена!" }
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
+    const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
     if (!isPasswordCorrect) {
-        return { success: false, result: "wrong password" };
+        return { success: false, result: "Неправильный пароль!" }
     }
 
     try {
-        const payload = { id: existingUser.id, role: existingUser.role };
-        const accessToken = await generateJwtToken(payload, "2h");
-        const refreshToken = await generateJwtToken(payload, "2d");
+        const payload = { id: existingUser.id, role: existingUser.role }
+        const accessToken = await generateJwtToken(payload, "5s")
+        const refreshToken = await generateJwtToken(payload, "2d")
+        if (!accessToken || !refreshToken) {
+            logger.log({
+                level: "error",
+                message: "[signInAction] ошибка при создании токена: generateJwtToken вернул null",
+            })
+            return { success: false, result: "Ошибка! Обратитесь в техподдержку." }
+        }
+        await db.refreshToken.create({
+            data: {
+                id: accessToken,
+                refreshToken: refreshToken
+            }
+        })
         const result = {
-            accessToken: {
-                token: accessToken,
-                expires: 7200000, // 2h
-            },
-            refreshToken: {
-                token: refreshToken,
-                expires: 172800000, // 2d
-            },
+            accessToken: accessToken,
+            isFirstLogin: existingUser.isFirstLogin
         }
         
-        return { success: true, result: result };
+        return { success: true, result: result }
     }
     catch (err) {
         logger.log({
             level: "error",
             message: `[signInAction] error: ${ err }`,
-        });
-        return { success: false, result: null };
+        })
+        return { success: false, result: "Ошибка! Обратитесь в техподдержку." }
     }
 }

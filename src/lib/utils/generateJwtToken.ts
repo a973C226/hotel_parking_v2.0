@@ -7,11 +7,11 @@ import { getSecretKey, getAlgorithm } from "@/lib/utils/jwtConfig";
 export const generateJwtToken = async (payload: { id: string, role: string }, expires: string): Promise<string | null> => {
 
     try {
-        const privateKey = await getSecretKey();
+        const privateKey = getSecretKey();
         if (!privateKey) {
             return null;
         }
-        const alg = await getAlgorithm();
+        const alg = getAlgorithm();
         if (!alg) {
             return null;
         }
@@ -22,16 +22,12 @@ export const generateJwtToken = async (payload: { id: string, role: string }, ex
             .sign(
                 privateKey
             );
-        logger.log({
-            level: "info",
-            message: `создание jwt токена`,
-        });
         return refreshToken;
     }
     catch (err) {
         logger.log({
             level: "error",
-            message: `ошибка при создании токена: ${ err }`,
+            message: `[generateJwtToken] ошибка при создании токена: ${ err }`,
         })
         return null;
     }

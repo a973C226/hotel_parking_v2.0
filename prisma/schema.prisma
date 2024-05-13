@@ -30,28 +30,28 @@ enum PaymentStatus {
 }
 
 model User {
-	id            String    @id @default(cuid())
-	name          String?
-	lastname      String?
-	middlename    String?
-	username      String? @unique
-	birthdate     DateTime?
-	gender        String?
-	phoneNumber   String
-	role          UserRole @default(GUEST)
-	email         String   @unique
-	emailVerified DateTime?
-	image         String?
-	password      String
-	transports    Transport[]
-	booking       Booking[]
+	id            		String    @id @default(cuid())
+	name          		String?
+	lastname     		String?
+	middlename    		String?
+	username      		String?
+	birthdate     		DateTime?
+	gender        		String?
+	phoneNumber   		String?
+	role          		UserRole @default(GUEST)
+	email         		String   @unique
+	emailVerified 		DateTime?
+	image         		String?
+	password      		String
+	isFirstLogin 		Boolean @default(true)
+	transports    		Transport[]
+	booking       		Booking[]
 }
 
 model VerificationToken {
 	id      String @id @default(cuid())
-	email   String
-	token   String @unique
-	expires DateTime
+	email  	String
+	token   String
 
 	@@unique([email, token])
 }
@@ -95,6 +95,6 @@ model Booking {
 }
 
 model RefreshToken {
-	id String @unique
-	refreshToken String @unique
+	id 				String @unique
+	refreshToken 	String @unique
 }

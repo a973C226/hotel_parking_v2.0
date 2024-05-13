@@ -1,14 +1,13 @@
-import uuid4 from "uuid4";
+import crypto from "crypto";
 
 import { db } from "@/lib/db";
-import { getVerificationTokenByEmail } from "@/lib/repositories/token";
+import { getVerificationTokenByEmail, getVerificationTokenByToken } from "@/lib/repositories/token";
 import { logger } from "@/lib/logger";
 
 export const generateVerificationEmailToken = async (email: string): Promise<string | null> => {
-    const token = uuid4();
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
+    const confirmToken = crypto.randomInt(100_000, 1_000_000).toString();
 
-    const existingToken = await getVerificationTokenByEmail(email);
+    const existingToken = await getVerificationTokenByToken(confirmToken);
 
     if (existingToken) {
         try {
@@ -16,16 +15,32 @@ export const generateVerificationEmailToken = async (email: string): Promise<str
                 where: {
                     id: existingToken.id,
                 },
-            });
-            logger.log({
-                level: "debug",
-                message: `удаление токена ${ existingToken.id }`,
-            });
+            })
         }
         catch (err) {
             logger.log({
                 level: "error",
-                message: `ошибка при удалении токена ${ existingToken.id }: ${ err }`,
+                message: `[generateVerificationEmailToken] ошибка при удалении токена: ${ existingToken.id }: ${ err }`,
+            });
+            return null;
+        }
+    }
+
+    const existingTokenByEmail = await getVerificationTokenByEmail(email);
+
+    if (existingTokenByEmail) {
+        try {
+            logger.info("удаление токена")
+            await db.verificationToken.delete({
+                where: {
+                    id: existingTokenByEmail.id,
+                },
+            })
+        }
+        catch (err) {
+            logger.log({
+                level: "error",
+                message: `[generateVerificationEmailToken] ошибка при удалении токена: ${ existingTokenByEmail.id }: ${ err }`,
             });
             return null;
         }
@@ -34,21 +49,16 @@ export const generateVerificationEmailToken = async (email: string): Promise<str
     try {
         const verficationToken = await db.verificationToken.create({
             data: {
-                email,
-                token,
-                expires,
+                email: email,
+                token: confirmToken
             }
-        });
-        logger.log({
-            level: "debug",
-            message: `создание токена ${ verficationToken.id }`,
         });
         return verficationToken.token;
     }
     catch (err) {
         logger.log({
             level: "error",
-            message: `ошибка при создании токена: ${ err }`,
+            message: `[generateVerificationEmailToken] ошибка при создании токена: ${ err }`,
         });
         return null;
     }

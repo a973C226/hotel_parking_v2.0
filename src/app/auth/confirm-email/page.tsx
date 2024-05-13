@@ -1,7 +1,11 @@
-export default function ConfirmEmail() {
-    return (
-        <>
-            <h1>Confirm Email</h1>
-        </>
-    );
+"use client"
+
+import { ConfirmEmailForm } from "@/components/auth/confirm-email-form";
+
+export default function SignIn() {
+	return (
+		<>
+			<ConfirmEmailForm/>
+		</>
+	);
 }

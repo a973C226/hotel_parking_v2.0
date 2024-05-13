@@ -1,36 +1,61 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { logger } from './lib/logger';
-import { publicRoutes, authRoutes, adminRoutes, businessUserRoutes } from '@/lib/routes';
-import { isAuthenticated } from './lib/utils/tokenControl';
-import { getUserByID } from './lib/repositories/user';
+import { NextRequest, NextResponse } from 'next/server'
+import { isVerifiedToken } from '@/lib/utils/auth'
+import { cookies } from 'next/headers'
+import { refreshTokenAction } from './lib/actions/auth/refreshTokenAction'
+import axiosInstance from './lib/axios'
+import axios from 'axios'
  
-// This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-    const req_url = request.nextUrl.pathname;
-    const isPublicRoute = publicRoutes.includes(req_url);
-    const isAuthRoute = authRoutes.includes(req_url);
-    if (isPublicRoute || isAuthRoute) {
-        return NextResponse.next();
+// 1. Specify protected and public routes
+const protectedRoutes = ['/dashboard']
+const publicRoutes = ['/', '/auth/sign-in', '/api/auth/sign-in', '/auth/refresh', '/api/auth/refresh', '/auth/sign-up', '/api/auth/sign-up']
+const host = process.env.HOST
+
+const getCallback = (req: NextRequest) => {
+  	const { nextUrl } = req
+    let callbackUrl = nextUrl.pathname
+    if (nextUrl.search) {
+        callbackUrl += nextUrl.search;
     }
-    // const { isAuth, userRole } = await isAuthenticated(request);
-    // if (!isAuth || !userRole) {
-    //     return;
-    // }
-    // switch (userRole) {
-    //     case "ADMIN":
-    //         const isAdminRoute = adminRoutes.includes(req_url);
-    //         return NextResponse.next();
-    //     case "BUSiNESS_USER":
-    //         const isBusinessUserRoute = businessUserRoutes.includes(req_url);
-    //         return NextResponse.next();
-    //     default:
-    //         return NextResponse.next();
-    // }
-    return;
+	console.log("callback: " + callbackUrl)
+    return encodeURIComponent(callbackUrl);
 }
  
-// See "Matching Paths" below to learn more
-// export const config = {
-//     matcher: '/:path*',
-// }
+export default async function middleware(req: NextRequest) {
+	const path = req.nextUrl.pathname
+	const isProtectedRoute = protectedRoutes.includes(path)
+	const isPublicRoute = publicRoutes.includes(path)
+	const isSignInRoute = path === "/auth/sign-in"
+
+	if (isPublicRoute) {
+        return NextResponse.next()
+    }
+
+	let accessToken = cookies().get('access_token')?.value ?? null
+	if (!accessToken) {
+		const encodedCallbackUrl = getCallback(req)
+			return NextResponse.redirect(new URL(`/auth/sign-in?callbackUrl=${encodedCallbackUrl}`, host))
+	}
+
+	let session = await isVerifiedToken(accessToken)
+	if (session === "ERR_JWT_EXPIRED") {
+		console.error(`[middleware] обновление токена`)
+		const encodedCallbackUrl = getCallback(req)
+		console.error(`[middleware] callback: ${encodedCallbackUrl}`)
+		return NextResponse.redirect(new URL(`/api/auth/refresh?callbackUrl=${encodedCallbackUrl}`, host))
+	}
+
+	if (isProtectedRoute && !session) {
+		const encodedCallbackUrl = getCallback(req)
+		return NextResponse.redirect(new URL(`/auth/sign-in?callbackUrl=${encodedCallbackUrl}`, host))
+	}
+
+	if (isSignInRoute && session) {
+		return NextResponse.redirect(new URL('/dashboard', host))
+	}
+
+	return NextResponse.next()
+}
+ 
+export const config = {
+	matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+}

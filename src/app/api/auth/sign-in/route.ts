@@ -4,19 +4,21 @@ import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerification
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
 import { signInSchema } from "@/lib/validations/signInSchema";
+import { serialize } from 'cookie'
 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
         const body = await request.json();
+
         const validatedFields = signInSchema.safeParse(body);
         if (!validatedFields.success) {
             logger.log({
                 level: "error",
-                message: validatedFields.error.message,
+                message: `[BodyParseError "api/auth/sign-in"]: ${validatedFields.error.message}`,
             });
             return new NextResponse(
-                JSON.stringify({ message: `ошибка валидации` }),
+                JSON.stringify({ message: "Ошибка авторизации." }),
                 { 
                     status: statusCode.StatusBadRequest,
                     headers: { "Content-Type": "application/json" }
@@ -24,39 +26,52 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
 
-        const signInResult = await signInAction(validatedFields.data);
-        if (!signInResult.success) {
+        const actionResult = await signInAction(validatedFields.data);
+        if (!actionResult.success) {
             return new NextResponse(
-                JSON.stringify({ message: `ошибка авторизации` }), 
+                JSON.stringify({
+                    message: actionResult.result
+                }), 
                 {
                     status: statusCode.StatusAuthorizationError, 
                     headers: { "Content-Type": "application/json" }
                 },
             );
         }
+        const accessCookie = serialize('access_token', actionResult.result.accessToken, {
+            maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+            path: '/',
+        })
+        // const refreshCookie = serialize('refresh_token', actionResult.result.refreshToken.token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === 'production',
+        //     maxAge: actionResult.result.refreshToken.expires, // 2 days
+        //     path: '/',
+        // })
+        
         const response = new NextResponse(
             JSON.stringify({ 
-                message: `успешная авторизация`,
-                access_token: signInResult.result.accessToken.token,
-                access_token_expires: signInResult.result.accessToken.expires,
-                refresh_token: signInResult.result.refreshToken.token,
-                refresh_token_expires: signInResult.result.refreshToken.expires
+                message: "Успешно!",
+                isFirstLogin: actionResult.result.isFirstLogin
              }), 
             {
                 status: statusCode.StatusOK, 
-                headers: { "Content-Type": "application/json" }
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Set-Cookie": accessCookie
+                 }
             },
-        );
+        )
         return response;
     } catch (error) {
         logger.log({
             level: "error",
-            message: `непредвиденная ошибка: ${ error }`,
+            message: `[ApiError "api/auth/sign-in"]: ${ error }`,
         });
-        return NextResponse.json(
-            { error: `Что-то пошло не так: ${ error }` }, 
+        return new NextResponse(
+            JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
             { 
-                status: statusCode.StatusUnknownError,
+                status: statusCode.StatusInternalServerError,
                 headers: { "Content-Type": "application/json" } 
             }
         );

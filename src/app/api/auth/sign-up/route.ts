@@ -9,18 +9,15 @@ import { signUpSchema } from "@/lib/validations/signUpSchema";
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
         const body = await request.json();
-        logger.log({
-            level: "info",
-            message: JSON.stringify(body),
-        })
+
         const validatedFields = signUpSchema.safeParse(body);
         if (!validatedFields.success) {
             logger.log({
                 level: "error",
-                message: validatedFields.error.message,
+                message: `[BodyParseError "api/auth/sign-up"]: ${validatedFields.error.message}`,
             });
             return new NextResponse(
-                JSON.stringify({ message: `ошибка валидации` }),
+                JSON.stringify({ message: "Ошибка регистрации." }),
                 { 
                     status: statusCode.StatusBadRequest,
                     headers: { "Content-Type": "application/json" }
@@ -28,13 +25,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             );
         }
         
-        const signUpResult = await signUpAction(validatedFields.data);
+        const actionResult = await signUpAction(validatedFields.data);
 
-        if (!signUpResult.success) {
+        if (!actionResult.success) {
             return new NextResponse(
                 JSON.stringify({ 
-                    message: `ошибка регистрации`,
-                    details: signUpResult.result
+                    message: actionResult.result
                  }), 
                 {
                     status: statusCode.StatusRegistrationError, 
@@ -42,30 +38,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 },
             )
         }
-        if (!signUpResult.result) {
-            return new NextResponse(
-                JSON.stringify({ message: `ожидалось получение user, но вернулось: ${ signUpResult.result }` }), 
-                { 
-                    status: statusCode.StatusInternalServerError,
-                    headers: { "Content-Type": "application/json" }
-                },
-            )
-        }
-
-        const verificationEmailToken = await sendVerificationEmailToken(signUpResult.result.email);
-
-        if (!verificationEmailToken.success) {
-            return new NextResponse(
-                JSON.stringify({ message: `${verificationEmailToken.result}` }),
-                { 
-                    status: statusCode.StatusInternalServerError, 
-                    headers: { "Content-Type": "application/json" } 
-                }
-            );
-        }
         
         return new NextResponse(
-            JSON.stringify({ message: `OK` }),
+            JSON.stringify({ message: "Аккаунт успешно создан!" }),
             { 
                 status: statusCode.StatusOK, 
                 headers: { "Content-Type": "application/json" }
@@ -74,10 +49,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     } catch (error) {
         logger.log({
             level: "error",
-            message: `непредвиденная ошибка: ${ error }`,
+            message: `[ApiError "api/auth/sign-up"]: ${ error }`,
         });
         return new NextResponse(
-            JSON.stringify({ message: `Что-то пошло не так: ${ error }` }), 
+            JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
             { 
                 status: statusCode.StatusInternalServerError,
                 headers: { "Content-Type": "application/json" } 

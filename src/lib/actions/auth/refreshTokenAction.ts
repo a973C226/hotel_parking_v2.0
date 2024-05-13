@@ -8,37 +8,55 @@ import { logger } from "@/lib/logger";
 import * as jose from 'jose';
 import { generateJwtToken } from "@/lib/utils/generateJwtToken";
 import { getAlgorithm, getSecretKey } from "@/lib/utils/jwtConfig";
+import { isVerifiedToken } from "@/lib/utils/auth";
+import { db } from "@/lib/db";
 
-export const refreshTokenAction = async (validatedFields: z.infer<typeof refreshTokenSchema>): Promise<{
+type RefreshBody = {
+    accessToken: string | null
+}
+
+export const refreshTokenAction = async (body: RefreshBody): Promise<{
     success: boolean;
     result: any;
 }> => {
-    const token = validatedFields.refreshToken;
-    logger.log({
-        level: "info",
-        message: `[refreshTokenAction] token: ${ token }`,
-    })
     try {
-        const privateKey = await getSecretKey();
-        if (!privateKey) {
+        const token = body.accessToken
+        
+        if (!token) {
             return { success: false, result: null };
         }
-        const { payload } = await jose.jwtVerify(token, privateKey);
-        const newPayload = { id: payload.id as string, role: payload.role as string };
-        const accessToken = await generateJwtToken(newPayload, "2h");
-        const refreshToken = await generateJwtToken(newPayload, "2d");
-        const result = {
-            accessToken: {
-                token: accessToken,
-                expires: 7200000, // 2h
-            },
-            refreshToken: {
-                token: refreshToken,
-                expires: 172800000, // 2d
-            },
-        }
         
-        return { success: true, result: result };
+        const refreshToken = await db.refreshToken.findUnique({
+            where: {
+                id: token
+            }
+        })
+        
+        const isVerified = await isVerifiedToken(refreshToken?.refreshToken ?? null)
+        console.log(`refreshTokenAction: ${refreshToken?.refreshToken ?? null}`)
+        if(!isVerified || isVerified === "ERR_JWT_EXPIRED") {
+            return { success: false, result: null };
+        }
+        const newPayload = { id: isVerified.id as string, role: isVerified.role as string }
+        const newAccessToken = await generateJwtToken(newPayload, "2h")
+        const newRefreshToken = await generateJwtToken(newPayload, "2d")
+        if (!newAccessToken || !newRefreshToken) {
+            return { success: false, result: null };
+        }
+        console.log(`newAccessToken: ${newAccessToken}`)
+        await db.refreshToken.create({
+            data: {
+                id: newAccessToken,
+                refreshToken: newRefreshToken
+            }
+        })
+        await db.refreshToken.delete({
+            where: {
+                id: token
+            }
+        })
+        
+        return { success: true, result: {accessToken: newAccessToken} };
     }
     catch (err) {
         logger.log({
