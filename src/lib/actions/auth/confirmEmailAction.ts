@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserByEmail, getUserByID } from "@/lib/repositories/user";
+import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
 import { getVerificationTokenByToken } from "@/lib/repositories/token";
 import { db } from "@/lib/db";
@@ -32,11 +32,6 @@ export const confirmEmailAction = async (body: ConfirmEmail): Promise<{
             },
             data: {
                 emailVerified: new Date()
-            },
-        });
-        await db.verificationToken.delete({
-            where: {
-                id: existingToken.id,
             },
         });
         return { success: true, result: "Почта успешно подтверждена!" };

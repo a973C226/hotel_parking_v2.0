@@ -1,50 +1,72 @@
-import axios from 'axios';
-// import createAuthRefreshInterceptor from 'axios-auth-refresh';
-// import { cookies } from 'next/headers'
+import axios from 'axios'
+import { getBaseURL } from './utils/config';
+import toast from 'react-hot-toast';
 
+const baseURL = getBaseURL()
 const axiosInstance  = axios.create({
-	baseURL: 'http://localhost:3000', // Replace with your API endpoint
-	timeout: 5000, // Set a timeout for requests (in milliseconds)
+	baseURL: baseURL,
 	headers: {
-		'Content-Type': 'application/json', // Set the default content type for request headers
-		Authorization: 'Bearer ', // Set authorization headers if needed
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		Authorization: ""
+	}
+})
+
+axiosInstance.interceptors.request.use(
+	config => {
+		const token = localStorage.getItem('access-token');
+		if (token) {
+			config.headers!['Authorization'] = token;
+		}
+		return config;
 	},
-});
+	error => {
+	  	return Promise.reject(error);
+	}
+)
 
-export const setHeaders = (name: string, value: any): void => {
-	axiosInstance.defaults.headers[name] = value;
-}
+axiosInstance.interceptors.response.use(
+	res => {
+	  return res;
+	},
+	async err => {
+	  const originalConfig = err.config;
+  
+		if (originalConfig.url !== '/api/auth/sign-in' && err.response) {
+			if (err.response.status === 401 && !originalConfig._retry) {
+				originalConfig._retry = true;
+				const refreshToken = localStorage.getItem('refresh-token')!
+				console.log(`[axios] обновление токена: ${refreshToken}`)
+				try {
+					const rs = await axios({
+						method: "POST",
+						url: baseURL + "/api/auth/refresh",
+						headers: {
+							"Authorization": refreshToken
+						}
+					});
 
-// const getAccessToken = () => {
-// 	const accessToken = cookies().get("access_token");
-// 	return accessToken? accessToken.value: null;
-// }
-
-// const getRefreshToken = () => {
-// 	const refreshToken = cookies().get("refresh_token");
-// 	return refreshToken? refreshToken.value: null;
-// }
-
-// const refreshAuthLogic = (failedRequest: any) =>
-//     axiosInstance({
-// 		method: 'get',
-// 		url: 'api/auth/refresh',
-// 		headers: {
-//             'Content-Type': 'application/json',
-//         },
-// 		data: {
-// 			refresh_token: getRefreshToken()
-// 		}
-// 	}).then((tokenRefreshResponse) => {
-// 		cookies().set("access_token", tokenRefreshResponse.data.access_token);
-// 		cookies().set("refresh_token", tokenRefreshResponse.data.refresh_token);
-//         failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.access_token;
-//         return Promise.resolve();
-//     });
-
-// createAuthRefreshInterceptor(
-//     axiosInstance,
-//     refreshAuthLogic
-// );
+					const access = rs.data.data['X-Auth-Token'];
+					const refresh = rs.data.data['X-Refresh-Token'];
+		
+					localStorage.setItem('access-token', access);
+					localStorage.setItem('refresh-token', refresh);
+		
+					return axiosInstance(originalConfig);
+				} catch (_error) {
+					toast.error('Session time out. Please login again.', {
+						id: 'sessionTimeOut'
+					});
+					localStorage.removeItem('access-token');
+					localStorage.removeItem('refresh-token');
+					window.location.href = window.location.origin;
+					return Promise.reject(_error);
+				}
+			}
+		}
+  
+	  	return Promise.reject(err);
+	}
+)
 
 export default axiosInstance;

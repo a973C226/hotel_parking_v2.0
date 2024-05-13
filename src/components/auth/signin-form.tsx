@@ -22,10 +22,8 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import axiosInstance from "@/lib/axios";
-import { useCookies } from 'react-cookie'
 import { AxiosResponse } from "axios";
 import { Spinner } from "flowbite-react";
-import { NextResponse } from "next/server";
 
 export const SignInForm = () => {
 	const searchParams = useSearchParams();
@@ -59,20 +57,16 @@ export const SignInForm = () => {
 			},
 			data: values
 		}).then(function (response: AxiosResponse<any, any>) {
-			setSuccess(response.data.message)
-			if (!response.data.isFirstLogin) {
-				router.push(callbackUrl || "/dashboard")
+			if (response.status === 200) {
+				const resData = response.data.data
+				localStorage.setItem('access-token', resData["X-Auth-Token"]);
+				localStorage.setItem('refresh-token', resData["X-Refresh-Token"]);
+				setSuccess(response.data.message)
+				if (!resData["isFirstLogin"]) {
+					router.push(callbackUrl || "/dashboard")
+				}
+				router.push("/auth/personal-info")
 			}
-			router.push("/auth/personal-info")
-			// let accessTokenExpires = new Date()
-			// accessTokenExpires.setTime(accessTokenExpires.getTime() + response.data.access_token_expires)
-
-			// let refreshTokenExpires = new Date()
-			// refreshTokenExpires.setTime(refreshTokenExpires.getTime() + response.data.refresh_token_expires)
-
-			// setCookie('access_token', response.data.access_token, { path: '/',  expires: accessTokenExpires})
-			// setCookie('refresh_token', response.data.refresh_token, {path: '/', expires: refreshTokenExpires})
-			
 		}).catch((error) => {
 			setLoading(false)
 			setError(error.response.data.message)

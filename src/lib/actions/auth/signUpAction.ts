@@ -2,10 +2,8 @@
 
 import bcrypt from "bcrypt";
 
-import * as z from "zod";
-import { signUpSchema } from "@/lib/validations/signUpSchema"
 import { db } from "@/lib/db";
-import { getUserByEmail, getUserByUsername } from "@/lib/repositories/user";
+import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
 import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerificationEmailToken";
 

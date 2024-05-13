@@ -1,12 +1,5 @@
-"use client"
-
-import Footer from "@/components/footer";
 import { HelloCard } from "@/components/hello-card";
 import { HelloNav } from "@/components/hello-nav";
-import Navigation from "@/components/navigation";
-import { getSession } from "@/lib/utils/auth";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 export default function StartPage() {
 	return (

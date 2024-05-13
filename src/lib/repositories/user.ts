@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { logger } from "@/lib/logger";
 import { User } from "@prisma/client";
 
 export const getUserByUsername = async (username: string): Promise<User | null> => {

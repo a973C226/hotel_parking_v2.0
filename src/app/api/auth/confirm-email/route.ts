@@ -1,11 +1,13 @@
 import { confirmEmailAction } from "@/lib/actions/auth/confirmEmailAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
+import { isVerifiedToken } from "@/lib/utils/auth";
 import { confirmEmailSchema } from "@/lib/validations/confirmEmailSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        
         const body = await request.json();
         
         const validatedFields = confirmEmailSchema.safeParse(body);
@@ -18,7 +20,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 JSON.stringify({ message: "Ошибка подтверждения почты." }),
                 { 
                     status: statusCode.StatusBadRequest,
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             );
         }

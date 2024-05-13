@@ -1,13 +1,9 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import * as z from "zod";
-import { signInSchema } from "@/lib/validations/signInSchema"
 import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
-import * as jose from 'jose';
-import { generateJwtToken } from "@/lib/utils/generateJwtToken";
-import { getAlgorithm, getSecretKey } from "@/lib/utils/jwtConfig";
+import { generateJwtToken } from "@/lib/utils/jwt";
 import { db } from "@/lib/db";
 
 type User = {
@@ -55,6 +51,7 @@ export const signInAction = async (body: User): Promise<{
         })
         const result = {
             accessToken: accessToken,
+            refreshToken: refreshToken,
             isFirstLogin: existingUser.isFirstLogin
         }
         

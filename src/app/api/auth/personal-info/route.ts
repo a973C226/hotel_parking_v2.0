@@ -3,10 +3,25 @@ import { personalInfoAction } from "@/lib/actions/auth/personalInfoAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
 import { personalInfoSchema } from "@/lib/validations/personalInfoSchema";
+import { isVerifiedToken } from "@/lib/utils/auth";
 
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
+        const session = await isVerifiedToken(request.headers.get("Authorization"))
+        if (!session) {
+            return new NextResponse(
+                JSON.stringify({ message: "unauthorized" }),
+                { 
+                    status: statusCode.StatusUnauthorized,
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
+                },
+            );
+        }
+        
         const body = await request.json();
 
         const validatedFields = personalInfoSchema.safeParse(body);
@@ -16,36 +31,30 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 message: `[BodyParseError "api/auth/personal-info"]: ${validatedFields.error.message}`,
             });
             return new NextResponse(
-                JSON.stringify({ message: "Ошибка регистрации." }),
+                JSON.stringify({ message: "Ошибка заполнения профиля." }),
                 { 
                     status: statusCode.StatusBadRequest,
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             );
         }
         
-        const actionResult = await personalInfoAction(validatedFields.data);
+        const actionResult = await personalInfoAction(session.id as string, validatedFields.data);
 
         if (!actionResult.success) {
-            if (actionResult.result === "unauthorized") {
-                return new NextResponse(
-                    JSON.stringify({ 
-                        message: "unauthorized"
-                     }), 
-                    {
-                        status: statusCode.StatusAuthorizationError,
-                        headers: { "Content-Type": "application/json" }
-                    },
-                )
-            }
-
             return new NextResponse(
                 JSON.stringify({ 
                     message: actionResult.result
                  }), 
                 {
                     status: statusCode.StatusBadRequest,  
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             )
         }
@@ -54,7 +63,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             JSON.stringify({ message: actionResult.result }),
             { 
                 status: statusCode.StatusOK, 
-                headers: { "Content-Type": "application/json" }
+                headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
             } 
         );
     } catch (error) {
@@ -66,7 +78,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
             { 
                 status: statusCode.StatusInternalServerError,
-                headers: { "Content-Type": "application/json" } 
+                headers: { 
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                }
             }
         );
     }

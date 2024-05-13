@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LoginForm } from "@/components/auth/signin-form";
+import { SignInForm } from "@/components/auth/signin-form";
 
 interface LoginButtonProps {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export const LoginButton = ({
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/login");
+    router.push("/auth/sign-in");
   };
 
   if (mode === "modal") {
@@ -33,7 +33,7 @@ export const LoginButton = ({
           {children}
         </DialogTrigger>
         <DialogContent className="p-0 w-auto bg-transparent border-none">
-          <LoginForm />
+          <SignInForm />
         </DialogContent>
       </Dialog>
     )

@@ -1,8 +1,11 @@
-import { generateVerificationEmailToken } from "@/lib/utils/generateVerificationEmailToken";
+"use server";
+
+import { generateVerificationEmailToken } from "@/lib/utils/verificationToken";
 import { logger } from "@/lib/logger";
 import nodemailer from "nodemailer";
+import { getBaseURL } from "@/lib/utils/config";
 
-const domain = process.env.NEXT_PUBLIC_APP_URL;
+const baseUrl = getBaseURL();
 
 export const sendVerificationEmailToken = async (email: string): Promise<{
     success: boolean;
@@ -14,7 +17,7 @@ export const sendVerificationEmailToken = async (email: string): Promise<{
         return { success: false, result: null };
     }
 
-    const confirmLink = `${ domain }/auth/confirm-email`;
+    const confirmLink = `${ baseUrl }/auth/confirm-email`;
 
     const smtpOptions = {
         host: process.env.SMTP_HOST || "",

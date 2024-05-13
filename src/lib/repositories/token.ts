@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { VerificationToken } from "@prisma/client";
-import { TokensIcon } from "@radix-ui/react-icons";
 
 export const getVerificationTokenByToken = async (
 	token: string

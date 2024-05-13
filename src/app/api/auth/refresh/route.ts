@@ -1,32 +1,34 @@
-"use server"
 import { NextResponse, NextRequest } from "next/server";
 import { refreshTokenAction } from "@/lib/actions/auth/refreshTokenAction";
-import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerificationEmailToken";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
-import { refreshTokenSchema } from "@/lib/validations/refreshTokenSchema";
-import { serialize } from 'cookie'
-import { cookies } from "next/headers";
+import { isVerifiedToken } from "@/lib/utils/auth";
 
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
-        const cookie = cookies().get("access_token")?.value ?? null;
-        if (!cookie) {
+        const refreshSession = await isVerifiedToken(request.headers.get("Authorization"))
+        if (!refreshSession) {
             logger.log({
                 level: "error",
-                message: `[CookieParseError "api/auth/refresh"]: ${cookie}`,
+                message: "[TokenParseError 'api/auth/refresh']",
             })
             return new NextResponse(
                 JSON.stringify({ message: "Ошибка обновления токена" }),
                 { 
                     status: statusCode.StatusBadRequest,
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             );
         }
 
-        const actionResult = await refreshTokenAction({ accessToken: cookie });
+        const actionResult = await refreshTokenAction({
+            id: refreshSession.id as string,
+            role: refreshSession.role as string
+        });
         if (!actionResult.success) {
             logger.log({
                 level: "error",
@@ -36,37 +38,30 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 JSON.stringify({ message: "Ошибка обновления токена" }), 
                 {
                     status: statusCode.StatusBadRequest, 
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             );
         }
-        const accessCookie = serialize('access_token', actionResult.result.accessToken, {
-            maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
-            path: '/'
-        })
-        cookies().set("access_token", accessCookie)
 
-        const { nextUrl } = request
-        let callbackUrl = nextUrl.pathname
-        if (nextUrl.search) {
-            callbackUrl += nextUrl.search;
-        }
-        console.log("callback: " + callbackUrl)
-        const callback = encodeURIComponent(callbackUrl);
-        return NextResponse.redirect(new URL(callback, process.env.HOST))
-        // return new NextResponse(
-        //     JSON.stringify({ 
-        //         message: "Токен обновлен",
-        //         access_token: actionResult.result.accessToken
-        //      }), 
-        //     {
-        //         status: statusCode.StatusOK, 
-        //         headers: { 
-        //             "Content-Type": "application/json",
-        //             "Set-Cookie": accessCookie
-        //         }
-        //     },
-        // )
+        return new NextResponse(
+            JSON.stringify({ 
+                message: "Токен обновлен",
+                data: {
+                    "X-Auth-Token": actionResult.result.accessToken,
+                    "X-Refresh-Token": actionResult.result.refreshToken
+                }
+             }), 
+            {
+                status: statusCode.StatusOK, 
+                headers: { 
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                }
+            },
+        )
     } catch (error) {
         logger.log({
             level: "error",
@@ -76,8 +71,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
             { 
                 status: statusCode.StatusInternalServerError,
-                headers: { "Content-Type": "application/json" } 
+                headers: { 
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                } 
             }
         );
     }
-  }
+}

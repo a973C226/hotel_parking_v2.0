@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import axiosInstance from "@/lib/axios";
-import { useCookies } from 'react-cookie'
 import { AxiosResponse } from "axios";
 import { Spinner } from "flowbite-react";
 

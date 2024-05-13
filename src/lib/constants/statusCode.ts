@@ -8,21 +8,8 @@ export const statusCode = {
     StatusForbidden: 403,
     StatusNotFound: 404,
     StatusMethodNotAllowed: 405,
-    StatusNotAcceptable: 406,
-    StatusConflict: 409,
     StatusAuthorizationError: 422,
     StatusRegistrationError: 423,
     StatusConfirmationError: 424,
-    StatusTooManyRequests: 429,
-    StatusInternalServerError: 500,
-    StatusNotImplemented: 501,
-    StatusBadGateway: 502,
-    StatusServiceUnavailable: 503,
-    StatusGatewayTimeout: 504,
-    StatusHTTPVersionNotSupported: 505,
-    StatusNetworkAuthenticationRequired: 511,
-    StatusNetworkConnectTimeoutError: 599,
-    StatusNetworkError: 600,
-    StatusNetworkTimeoutError: 601,
-    StatusUnknownError: 602
+    StatusInternalServerError: 500
 };

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ThemeModeScript } from "flowbite-react";
 import "@/app/globals.css";
-import Footer from "@/components/footer";
-import Navigation from "@/components/navigation";
-import { HelloNav } from "@/components/hello-nav";
 import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +19,10 @@ export default function RootLayout({
 	return (
 		<html lang="ru">
 			<body className={inter.className}>
-				<Toaster />
-				{children}
+				<Providers>
+					<Toaster />
+					{children}
+				</Providers>
 			</body>
       	</html>
 	);
