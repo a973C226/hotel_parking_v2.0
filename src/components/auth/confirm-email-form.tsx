@@ -25,7 +25,8 @@ import { AxiosResponse } from "axios";
 import { Spinner } from "flowbite-react";
 
 export const ConfirmEmailForm = () => {
-
+	const searchParams = useSearchParams();
+	const email = searchParams.get("email");
 	const [error, setError] = useState<string | undefined>("");
 	const [success, setSuccess] = useState<string | undefined>("");
 	const [isPending, startTransition] = useTransition();
@@ -66,7 +67,7 @@ export const ConfirmEmailForm = () => {
 		<CardWrapper
 			headerLabel="Подтвердите почту"
 			backButtonLabel="Не пришло письмо?"
-			backButtonHref="/auth/register"
+			backButtonHref={`/api/auth/confirm-email/resend?email=${email}`}
 		>
 			<Form {...form}>
 				<form 

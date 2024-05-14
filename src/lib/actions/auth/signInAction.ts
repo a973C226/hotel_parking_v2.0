@@ -34,7 +34,7 @@ export const signInAction = async (body: User): Promise<{
 
     try {
         const payload = { id: existingUser.id, role: existingUser.role }
-        const accessToken = await generateJwtToken(payload, "5s")
+        const accessToken = await generateJwtToken(payload, "2h")
         const refreshToken = await generateJwtToken(payload, "2d")
         if (!accessToken || !refreshToken) {
             logger.log({

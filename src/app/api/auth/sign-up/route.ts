@@ -20,7 +20,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 JSON.stringify({ message: "Ошибка регистрации." }),
                 { 
                     status: statusCode.StatusBadRequest,
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             );
         }
@@ -30,20 +33,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!actionResult.success) {
             return new NextResponse(
                 JSON.stringify({ 
-                    message: actionResult.result
-                 }), 
+                    message: actionResult.result.message
+                }), 
                 {
                     status: statusCode.StatusRegistrationError, 
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
                 },
             )
         }
         
         return new NextResponse(
-            JSON.stringify({ message: "Аккаунт успешно создан!" }),
+            JSON.stringify({ 
+                message: actionResult.result.message,
+                data: actionResult.result.user
+            }),
             { 
                 status: statusCode.StatusOK, 
-                headers: { "Content-Type": "application/json" }
+                headers: { 
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                }
             } 
         );
     } catch (error) {
@@ -55,7 +67,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
             { 
                 status: statusCode.StatusInternalServerError,
-                headers: { "Content-Type": "application/json" } 
+                headers: { 
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                } 
             }
         );
     }

@@ -1,7 +1,6 @@
 import { confirmEmailAction } from "@/lib/actions/auth/confirmEmailAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
-import { isVerifiedToken } from "@/lib/utils/auth";
 import { confirmEmailSchema } from "@/lib/validations/confirmEmailSchema";
 import { NextRequest, NextResponse } from "next/server";
 

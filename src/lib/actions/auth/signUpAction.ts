@@ -37,7 +37,7 @@ export const signUpAction = async (body: NewUser): Promise<{
         });
         sendVerificationEmailToken(user.email)
 
-        return { success: true, result: "Аккаунт успешно создан!" };
+        return { success: true, result: { message: "Аккаунт успешно создан!", user: user } };
     }
     catch (err) {
         logger.log({

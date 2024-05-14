@@ -4,6 +4,7 @@ import { generateVerificationEmailToken } from "@/lib/utils/verificationToken";
 import { logger } from "@/lib/logger";
 import nodemailer from "nodemailer";
 import { getBaseURL } from "@/lib/utils/config";
+import { deleteVerificationTokenByEmail, getVerificationTokenByEmail } from "@/lib/repositories/token";
 
 const baseUrl = getBaseURL();
 
@@ -11,13 +12,19 @@ export const sendVerificationEmailToken = async (email: string): Promise<{
     success: boolean;
     result: any;
 }> => {
+
+    const existingToken = await getVerificationTokenByEmail(email)
+    if (existingToken) {
+        await deleteVerificationTokenByEmail(email)
+    }
+
     const token = await generateVerificationEmailToken(email);
 
     if (!token) {
         return { success: false, result: null };
     }
 
-    const confirmLink = `${ baseUrl }/auth/confirm-email`;
+    const confirmLink = `${ baseUrl }/auth/confirm-email?email=${email}`;
 
     const smtpOptions = {
         host: process.env.SMTP_HOST || "",

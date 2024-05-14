@@ -28,3 +28,17 @@ export const getVerificationTokenByEmail = async (
 		return null;
 	}
 }
+
+export const deleteVerificationTokenByEmail = async (
+	email: string
+) => {
+	try {
+		const verificationToken = await db.verificationToken.deleteMany({
+				where: { email: email }
+		});
+
+		return verificationToken;
+	} catch {
+		return null;
+	}
+}

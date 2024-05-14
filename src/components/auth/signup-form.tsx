@@ -54,10 +54,12 @@ export const SignUpForm = () => {
 				data: values
 			}).then(function (response: AxiosResponse<any, any>) {
 				setSuccess(response.data.message)
-				router.push("/auth/confirm-email")
+				console.log(response.data.data.email)
+				router.push(`/auth/confirm-email?email=${response.data.data.email}`)
 			}).catch((error) => {
 				setLoading(false);
-				setError(error.response.data.message)
+				console.log(JSON.stringify(error.response))
+				setError(error.response)
 			})
 
 		});

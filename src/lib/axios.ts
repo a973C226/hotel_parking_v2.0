@@ -59,7 +59,7 @@ axiosInstance.interceptors.response.use(
 					});
 					localStorage.removeItem('access-token');
 					localStorage.removeItem('refresh-token');
-					window.location.href = window.location.origin;
+					window.location.href = window.location.origin + "/auth/sign-in";
 					return Promise.reject(_error);
 				}
 			}

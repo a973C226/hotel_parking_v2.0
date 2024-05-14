@@ -11,7 +11,7 @@ interface BackButtonProps {
 
 export const BackButton = ({
   href,
-  label,
+  label
 }: BackButtonProps) => {
   return (
     <Button
