@@ -14,7 +14,7 @@ export const personalInfoSchema = z.object({
         message: "Введите отчество.",
     }),
     birthdate: z.custom<`${string}`>((val) => {
-        return typeof val === "string" ? /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)\d\d$/.test(val) : false;
+        return typeof val === "string" ? /^(0?[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)\d\d$/.test(val) : false;
     }, "Формат даты ДД.ММ.ГГГГ"),
     gender: z.string().min(1, {
       message: "Выберите пол.",

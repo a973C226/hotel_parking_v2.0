@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "./providers";
+import { Suspense } from "react";
+import { Spinner } from "flowbite-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +22,16 @@ export default function RootLayout({
 		<html lang="ru">
 			<body className={inter.className}>
 				<Providers>
-					<Toaster />
-					{children}
+					<Suspense fallback={
+						<div className="flex w-full h-full items-center justify-center">
+							<div className="text-center">
+								Загрузка... <Spinner aria-label="Center-aligned spinner example" size="xl" />
+							</div>
+						</div>
+					}>
+						<Toaster />
+						{children}
+					</Suspense>
 				</Providers>
 			</body>
       	</html>

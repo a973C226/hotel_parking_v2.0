@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { getUserByUsername } from "@/lib/repositories/user";
+import { getUserByID, getUserByUsername } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
 
 type PersonalInfo = {
@@ -14,13 +14,20 @@ type PersonalInfo = {
     phoneNumber: string
 }
 
-export const personalInfoAction = async (userId: string, body: PersonalInfo): Promise<{
+export const personalInfoAction = async (userId: string, body: PersonalInfo, method: string): Promise<{
     success: boolean;
     result: any;
 }> => {
+    const existingUserById = await getUserByID(userId);
+    if (!existingUserById) {
+        return { success: false, result: "Пользователь не найден" };
+    }
 
-    const existingUser = await getUserByUsername(body.username);
-    if (existingUser) {
+    const existingUserByUsername = await getUserByUsername(body.username);
+    if (method === "POST" && existingUserByUsername) {
+        return { success: false, result: "Username уже используется" };
+    }
+    if (method === "PUT" && existingUserByUsername?.id != userId) {
         return { success: false, result: "Username уже используется" };
     }
 
@@ -38,7 +45,7 @@ export const personalInfoAction = async (userId: string, body: PersonalInfo): Pr
             }
         })
 
-        return { success: true, result: "Профиль успешно заполнен!" }
+        return { success: true, result: "Профиль успешно сохранен!" }
     }
     catch (err) {
         logger.log({

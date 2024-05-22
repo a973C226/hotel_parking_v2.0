@@ -5,7 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 export const runtime = 'edge' // 'nodejs' (default) | 'edge'
 const baseUrl = getBaseURL()
 
-function useWaitQuery(props: { wait: number }) {
+export function useWaitQuery(props: { wait: number }) {
     const query = useSuspenseQuery({
       queryKey: ['wait', props.wait],
       queryFn: async () => {
