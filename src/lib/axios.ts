@@ -36,7 +36,6 @@ axiosInstance.interceptors.response.use(
 			if (err.response.status === 401 && !originalConfig._retry) {
 				originalConfig._retry = true;
 				const refreshToken = localStorage.getItem('refresh-token')!
-				console.log(`[axios] обновление токена: ${refreshToken}`)
 				try {
 					const rs = await axios({
 						method: "POST",

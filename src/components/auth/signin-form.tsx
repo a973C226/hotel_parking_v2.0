@@ -62,7 +62,6 @@ export const SignInForm = () => {
 				localStorage.setItem('access-token', resData["X-Auth-Token"]);
 				localStorage.setItem('refresh-token', resData["X-Refresh-Token"]);
 				setSuccess(response.data.message)
-				console.log(`isFirstLogin: ${resData["isFirstLogin"]}`)
 				if (!resData["isFirstLogin"]) {
 					return router.push(callbackUrl || "/dashboard")
 				}

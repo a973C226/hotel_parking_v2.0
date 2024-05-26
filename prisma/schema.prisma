@@ -46,6 +46,7 @@ model User {
 	isFirstLogin 		Boolean @default(true)
 	transports    		Transport[]
 	booking       		Booking[]
+	isDeleted	        Boolean @default(false)
 }
 
 model VerificationToken {
@@ -64,6 +65,7 @@ model Transport {
 	brand         String?
 	model         String?
 	color         String? 
+	isDeleted	  Boolean @default(false)
 }
 
 model Parking {

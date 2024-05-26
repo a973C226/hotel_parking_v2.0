@@ -3,7 +3,6 @@ type ProfileHeadProps = {
 }
 
 export default function ProfileHead({user}: ProfileHeadProps) {
-    console.log(user)
     return (
         <div className="flex flex-col justify-center items-center gap-10">
             <img className="rounded-full w-48 h-48 border-gray-900" src="https://www.1zoom.ru/big2/62/199578-yana.jpg"></img>

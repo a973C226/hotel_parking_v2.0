@@ -39,7 +39,6 @@ export const UserInfo = ({
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition()
 	const [isLoading, setLoading] = useState<boolean>(false);
-	const router = useRouter()
 	const [isDisabled, setDisabled] = useState(true)
 	const parsedBirthdate = parseDateToString(user?.birthdate)
 
@@ -56,7 +55,6 @@ export const UserInfo = ({
 		},
 	});
     const onSubmit = (values: z.infer<typeof personalInfoSchema>) => {
-		console.log(values)
 		setError("");
 		setSuccess("");
 		setLoading(true);
@@ -252,7 +250,7 @@ export const UserInfo = ({
 				</form>
 				{isDisabled && 
 					<div className="flex w-full justify-center mt-4">
-						<Button onClick={(e) => {setDisabled(false)}} className="bg-gray-900">Редактировать профиль</Button>
+						<Button onClick={() => {setDisabled(false)}} className="bg-gray-900">Редактировать профиль</Button>
 					</div>
 				}
 			</Form>

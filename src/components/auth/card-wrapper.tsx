@@ -11,8 +11,8 @@ import { BackButton } from "@/components/auth/back-button";
 
 interface CardWrapperProps {
 	children: React.ReactNode;
-	backButtonLabel: string | null;
-	backButtonHref: string | null;
+	backButtonLabel?: string | null;
+	backButtonHref?: string | null;
 	headerLabel: string;
 };
 

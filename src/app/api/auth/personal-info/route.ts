@@ -28,7 +28,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!validatedFields.success) {
             logger.log({
                 level: "error",
-                message: `[BodyParseError "api/auth/personal-info"]: ${validatedFields.error.message}`,
+                message: `[BodyParseError "POST api/auth/personal-info"]: ${validatedFields.error.message}`,
             });
             return new NextResponse(
                 JSON.stringify({ message: "Ошибка заполнения профиля." }),
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     } catch (error) {
         logger.log({
             level: "error",
-            message: `[ApiError "api/auth/personal-info"]: ${ error }`,
+            message: `[ApiError "POST api/auth/personal-info"]: ${ error }`,
         });
         return new NextResponse(
             JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
@@ -109,7 +109,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         if (!validatedFields.success) {
             logger.log({
                 level: "error",
-                message: `[BodyParseError "api/auth/personal-info"]: ${validatedFields.error.message}`,
+                message: `[BodyParseError "PUT api/auth/personal-info"]: ${validatedFields.error.message}`,
             });
             return new NextResponse(
                 JSON.stringify({ message: "Ошибка заполнения профиля." }),
@@ -153,7 +153,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     } catch (error) {
         logger.log({
             level: "error",
-            message: `[ApiError "api/auth/personal-info"]: ${ error }`,
+            message: `[ApiError "PUT api/auth/personal-info"]: ${ error }`,
         });
         return new NextResponse(
             JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
