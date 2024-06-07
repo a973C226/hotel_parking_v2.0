@@ -24,10 +24,10 @@ type UserButtonProps = {
 export const UserButton = ({user}: UserButtonProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex space-x-4 justify-between bg-slate-300/10 p-2 rounded-md min-w-36 items-center shadow-md">
+      <DropdownMenuTrigger className="flex space-x-4 justify-between bg-slate-300/50 p-2 rounded-md min-w-36 items-center shadow-md">
             <div className="flex space-x-4 items-center">
                 <Avatar>
-                    <AvatarImage src="https://www.1zoom.ru/big2/62/199578-yana.jpg" />
+                    <AvatarImage src="" />
                     <AvatarFallback className="bg-sky-500">
                         <FaUser className="text-white" />
                     </AvatarFallback>
@@ -43,25 +43,21 @@ export const UserButton = ({user}: UserButtonProps) => {
       <DropdownMenuContent className="w-40" align="end">
         <LogoutButton>
           <DropdownMenuItem>
-            <ExitIcon className="h-4 w-4 mr-2" />
             Профиль
           </DropdownMenuItem>
         </LogoutButton>
         <LogoutButton>
           <DropdownMenuItem>
-            <ExitIcon className="h-4 w-4 mr-2" />
-            Моя бронь
-          </DropdownMenuItem>
-        </LogoutButton>
-        <LogoutButton>
-          <DropdownMenuItem>
-            <ExitIcon className="h-4 w-4 mr-2" />
             Мой транспорт
           </DropdownMenuItem>
         </LogoutButton>
         <LogoutButton>
           <DropdownMenuItem>
-            <ExitIcon className="h-4 w-4 mr-2" />
+            История операций
+          </DropdownMenuItem>
+        </LogoutButton>
+        <LogoutButton>
+          <DropdownMenuItem>
             Выйти
           </DropdownMenuItem>
         </LogoutButton>

@@ -17,8 +17,8 @@ const DashboardLayout = ({
     const user = useCurrentUser()
 	return ( 
         <MyContext.Provider value={user}>
-            <div className="h-full px-5 flex flex-col ">
-                {/* <DashboardNavigation/> */}
+            <div className="h-full md:px-5 px-2 flex flex-col justify-between">
+                <DashboardNavigation/>
                 {children}
                 <Footer/>
             </div>

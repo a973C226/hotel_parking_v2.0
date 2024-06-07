@@ -5,7 +5,6 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// import { RegisterSchema } from "@/schemas";
 import { personalInfoSchema } from "@/lib/validations/personalInfoSchema"
 import { Input } from "@/components/ui/input";
 import {
@@ -61,7 +60,7 @@ export const PersonalInfoForm = () => {
 				data: values
 			}).then(function (response: AxiosResponse<any, any>) {
 				setSuccess(response.data.message)
-				router.push("/dashboard")
+				router.push("/profile")
 			}).catch((error) => {
 				setLoading(false);
 				setError(error.response.data.message)

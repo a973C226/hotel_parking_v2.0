@@ -63,9 +63,9 @@ export const SignInForm = () => {
 				localStorage.setItem('refresh-token', resData["X-Refresh-Token"]);
 				setSuccess(response.data.message)
 				if (!resData["isFirstLogin"]) {
-					return router.push(callbackUrl || "/dashboard")
+					return router.push(callbackUrl || "/profile")
 				}
-				return router.push("/auth/personal-info")
+				return router.push("/profile/personal-info")
 			}
 		}).catch((error) => {
 			setLoading(false)
@@ -109,7 +109,7 @@ export const SignInForm = () => {
 							name="password"
 							render={({ field }) => (
 								<FormItem>
-								<FormLabel>Password</FormLabel>
+								<FormLabel>Пароль</FormLabel>
 								<FormControl>
 									<Input
 										{...field}

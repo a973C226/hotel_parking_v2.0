@@ -21,7 +21,7 @@ const DashboardLayout = ({
 			ns: "use-load-option",
 			load: "Map,Placemark,control.ZoomControl,control.FullscreenControl,geoObject.addon.balloon",
 		}} >
-			<div className="h-full px-5 flex flex-col justify-between bg-[url('https://www-europe.infiniti-cdn.net/content/dam/Infiniti/entryway/vehicles/qx50/2019/find-your-finish/QM1-lunar-white-swatch.jpg')] bg-cover">
+			<div className="h-full md:px-5 px-2 flex flex-col justify-between bg-[url('https://www-europe.infiniti-cdn.net/content/dam/Infiniti/entryway/vehicles/qx50/2019/find-your-finish/QM1-lunar-white-swatch.jpg')] bg-cover">
 				<DashboardNavigation/>
 				{children}
 				<Footer/>

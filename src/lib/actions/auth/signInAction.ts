@@ -43,12 +43,6 @@ export const signInAction = async (body: User): Promise<{
             })
             return { success: false, result: "Ошибка! Обратитесь в техподдержку." }
         }
-        await db.refreshToken.create({
-            data: {
-                id: accessToken,
-                refreshToken: refreshToken
-            }
-        })
         const result = {
             accessToken: accessToken,
             refreshToken: refreshToken,

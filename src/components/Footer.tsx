@@ -1,22 +1,23 @@
 export default function Footer() {
     return (
-        <footer className="relative w-full bottom-0 left-0 ">
+        <footer className="w-full ">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-                <div className="sm:flex sm:flex-col sm:items-center sm:justify-center sm:space-y-6 md:flex-row md:justify-between md:space-y-0">
-                    <ul className="flex flex-wrap items-center mb-6 text-lg font-medium text-gray-900 sm:mb-0 dark:text-gray-400">
+                <div className="flex flex-col items-center justify-center md:flex-row md:justify-between md:space-y-0">
+                    <ul className="flex gap-4 items-center mb-6 text-sm mobile:text-lg font-medium text-gray-900 sm:mb-0 dark:text-gray-400">
                         <li>
-                            <a href="#" className="hover:underline me-4 md:me-6">О нас</a>
+                            <a href="#" className="hover:underline">О нас</a>
                         </li>
                         <li>
-                            <a href="#" className="hover:underline me-4 md:me-6">Цены</a>
+                            <a href="#" className="hover:underline">Цены</a>
                         </li>
                         <li>
-                            <a href="#" className="hover:underline me-4 md:me-6">Как доехать?</a>
+                            <a href="#" className="hover:underline">Как доехать?</a>
                         </li>
                     </ul>
-                    <span className="block text-lg text-gray-900 sm:text-center dark:text-gray-400">
-                        © 2024 <a href="https://flowbite.com/" className="hover:underline">WONE-IT™</a>. Все права защищены.
-                    </span>
+                    <div className="flex flex-col md:flex-row md:gap-4 items-center text-sm mobile:text-lg text-gray-900 sm:text-center">
+                        <div className="block">© 2024 <a href="https://flowbite.com/" className="hover:underline">WONE-IT™</a>.</div>
+                        <div className="block">Все права защищены.</div>
+                    </div>
                 </div>
             </div>
         </footer>

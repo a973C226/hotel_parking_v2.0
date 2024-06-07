@@ -31,7 +31,6 @@ export default function Profile() {
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition()
 	const [isLoading, setLoading] = useState<boolean>(false);
-	const router = useRouter()
     const user = useLayoutContext()
 
     

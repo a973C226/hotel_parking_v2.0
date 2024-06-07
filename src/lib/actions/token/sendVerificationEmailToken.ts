@@ -8,24 +8,20 @@ import { deleteVerificationTokenByEmail, getVerificationTokenByEmail } from "@/l
 
 const baseUrl = getBaseURL();
 
-export const sendVerificationEmailToken = async (email: string): Promise<{
-    success: boolean;
-    result: any;
-}> => {
-
+export const sendVerificationEmailToken = async (email: string): Promise<{ success: boolean; result: null; }> => {
     const existingToken = await getVerificationTokenByEmail(email)
     if (existingToken) {
         await deleteVerificationTokenByEmail(email)
     }
 
     const token = await generateVerificationEmailToken(email);
-
+    
     if (!token) {
         return { success: false, result: null };
     }
 
-    const confirmLink = `${ baseUrl }/auth/confirm-email?email=${email}`;
-
+    const confirmLink = `${ baseUrl }/auth/confirm-email?email=${ email }`;
+    
     const smtpOptions = {
         host: process.env.SMTP_HOST || "",
         port: parseInt(process.env.SMTP_PORT || ""),
@@ -37,10 +33,8 @@ export const sendVerificationEmailToken = async (email: string): Promise<{
     }
 
     try {
-        const transporter = nodemailer.createTransport({
-            ...smtpOptions,
-        })
-    
+        const transporter = nodemailer.createTransport({ ...smtpOptions })
+        
         await transporter.sendMail({
             from: process.env.SMTP_USER,
             to: email,

@@ -4,4 +4,4 @@ export const confirmEmailSchema = z.object({
     code: z.string().min(1, {
         message: "Введите код из письма.",
     }),
-  });
+});
