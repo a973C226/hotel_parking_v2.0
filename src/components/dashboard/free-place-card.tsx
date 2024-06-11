@@ -22,26 +22,30 @@ import { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { Spinner } from "flowbite-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useDashboardContext } from "@/app/(protected)/dashboard/layout";
+import { Parking } from "@prisma/client";
 
 
 interface FreePlaceCardProps {
-    hotel: [string, Dispatch<SetStateAction<string>>],
+    datetimeFrom: [string, Dispatch<SetStateAction<string>>],
+    datetimeTo: [string, Dispatch<SetStateAction<string>>],
     parking: [string, Dispatch<SetStateAction<string>>]
 }
 
 export const FreePlaceCard = (props: FreePlaceCardProps) => {
-    const [hotelState, setHotel] = props.hotel
+    const [datetimeFromState, setDatetimeFrom] = props.datetimeFrom
+	const [datetimeToState, setDatetimeTo] = props.datetimeTo
 	const [parkingState, setParking] = props.parking
     const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition()
 	const [isLoading, setLoading] = useState<boolean>(false);
+    const [freePlaces, setFreePlaces] = useState<number | null>(null);
+    const [parkings, _] = useDashboardContext()
 	const router = useRouter()
 
-    
-    
 	const form = useForm<z.infer<typeof freePlaceSchema>>({
-		
+		resolver: zodResolver(freePlaceSchema),
 		defaultValues: {
 			datetimeFrom: "",
 			datetimeTo: "",
@@ -49,28 +53,25 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
 		},
 	});
 
-    const onChange = (values: any) => {
-        console.log(values.parkingId)
-    }
-
 	const onSubmit = (values: z.infer<typeof freePlaceSchema>) => {
 		setError("");
 		setSuccess("");
 		setLoading(true);
+        setFreePlaces(() => {return null})
 
 		startTransition(() => {
 			axiosInstance({
 				method: "POST",
-				url: "/api/auth/personal-info",
+				url: "/api/booking/free-places",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				data: values
 			}).then(function (response: AxiosResponse<any, any>) {
-				setSuccess(response.data.message)
-				router.push("/profile")
+                setLoading(false)
+                setFreePlaces(() => {return response.data.data})
 			}).catch((error) => {
-				setLoading(false);
+				setLoading(false)
 				setError(error.response.data.message)
 			})
 		});
@@ -78,9 +79,7 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
 
     return (
         <CardWrapper
-            headerLabel="Свободные места"
-            backButtonLabel={null}
-            backButtonHref={null}
+            headerLabel="Проверьте свободные места"
         >
             <Form {...form}>
                 <form 
@@ -113,13 +112,12 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                        <Input
-                                            {...field}
-                                            type="datetime-local"
-                                            disabled={isPending}
-                                            placeholder="datetimeTo"
-                                            onChange={(e: any) => {setParking(e.target.value)}}
-                                        />
+                                            <Input
+                                                {...field}
+                                                type="datetime-local"
+                                                disabled={isPending}
+                                                placeholder="datetimeTo"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -143,12 +141,11 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Парковка 1" onClick={(e: any) => {setParking(e.target.value)}}>
-                                                    Парковка 1
-                                                </SelectItem>
-                                                <SelectItem value="female" onClick={(e: any) => {setParking(() => {return e.target.value})}}>
-                                                    Парковка 2
-                                                </SelectItem>
+                                                {parkings && parkings.map((parking: Parking) => (
+                                                    <SelectItem key={parking.id} value={parking.id}>
+                                                        {parking.parkingName}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -156,6 +153,20 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
                                 )}
                             />
                         </div>
+                        {freePlaces != null &&
+                            <div className="flex flex-col gap-4">
+                                <FormLabel>Свободные места</FormLabel>
+                                <Input
+                                    disabled={true}
+                                    placeholder="Свободные места"
+                                    value={freePlaces}
+                                    className={freePlaces != 0 ? 
+                                        "border-solid border-2 border-emerald-400"
+                                        :
+                                        "border-solid border-2 border-rose-500"}
+                                />
+                            </div>
+                        }
                     </div>
                     <FormError message={error} />
                     <FormSuccess message={success} />

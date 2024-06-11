@@ -63,7 +63,6 @@ export const TransportCard = ({transport, setTransport}: TransportCardProps) => 
 
 		});
 	};
-    //transportInfoSchema
     return (
         <Accordion className="w-80 sm:w-[500px]" collapseAll>
             <Accordion.Panel>

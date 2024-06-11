@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         }
         
         const body = await request.json();
-
+        
         const validatedFields = personalInfoSchema.safeParse(body);
         if (!validatedFields.success) {
             logger.log({

@@ -1,3 +1,5 @@
+import { useUserBookings } from "@/hooks/use-user-bookings";
+import { useUserTransport } from "@/hooks/use-user-transport";
 import { FaUser } from "react-icons/fa";
 
 type ProfileHeadProps = {
@@ -5,6 +7,8 @@ type ProfileHeadProps = {
 }
 
 export default function ProfileHead({user}: ProfileHeadProps) {
+    const userBookings = useUserBookings()
+    const [userTransport, _] = useUserTransport()
     return (
         <div className="flex flex-col justify-center items-center gap-10">
             <FaUser className="text-white w-48 h-48" />
@@ -17,8 +21,12 @@ export default function ProfileHead({user}: ProfileHeadProps) {
                 <h3 className="text-xl font-normal leading-none tracking-tight text-white">{user.username}</h3>
             </div>
             <div className="flex items-center gap-10">
+            <div className="flex flex-col items-center gap-4">
+                    <h1 className="text-3xl font-semibold leading-none tracking-tight text-white">{userTransport && userTransport.length}</h1>
+                    <p className="text-white">транспортов</p>
+                </div>
                 <div className="flex flex-col items-center gap-4">
-                    <h1 className="text-3xl font-semibold leading-none tracking-tight text-white">0</h1>
+                    <h1 className="text-3xl font-semibold leading-none tracking-tight text-white">{userBookings && userBookings.length}</h1>
                     <p className="text-white">бронирований</p>
                 </div>
             </div>

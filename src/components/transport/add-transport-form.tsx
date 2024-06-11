@@ -1,3 +1,5 @@
+"use client"
+
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -14,6 +16,7 @@ import { AxiosResponse } from "axios";
 import { Spinner } from "flowbite-react";
 import { DialogClose } from "../ui/dialog";
 import { Transport } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 
 export const AddTransportForm = () => {
@@ -23,6 +26,7 @@ export const AddTransportForm = () => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition()
     const [isCanceled, setIsCanceled] = useState(false)
+    const router = useRouter()
     const form = useForm<z.infer<typeof transportInfoSchema>>({
 		resolver: zodResolver(transportInfoSchema),
 		defaultValues: {
@@ -55,7 +59,6 @@ export const AddTransportForm = () => {
 				setLoading(() => {return false});
 				setError(error.response.data.message)
 			})
-
 		});
     }
     return (

@@ -13,15 +13,13 @@ export const UserTransport = () => {
     const [userTransport, setTransport]: any = useUserTransport()
     return (
         <>
-        {userTransport && 
+        {userTransport!=null && 
             <div className="h-auto flex flex-col items-center">
-                {userTransport && 
-                    <div className="flex flex-col gap-4">
-                        {userTransport.map((transport: Transport) => (
-                            <TransportCard transport={transport} setTransport={setTransport}/>
-                        ))}
-                    </div>
-                }
+                <div className="flex flex-col gap-4">
+                    {userTransport.map((transport: Transport) => (
+                        <TransportCard transport={transport} setTransport={setTransport}/>
+                    ))}
+                </div>
                 {userTransport.length==0 && <div className="text-center">Транспорта нет</div>}
                 <AddButton asChild>
                     <Button className="mt-6" variant="secondary" size="lg" >

@@ -46,7 +46,8 @@ model User {
 	isFirstLogin 		Boolean @default(true)
 	verificationToken	VerificationToken[]
 	transports    		Transport[]
-	booking       		Booking[]
+	bookings       		Booking[]
+	payments			Payment[]
 	isDeleted	        Boolean @default(false)
 }
 
@@ -73,8 +74,10 @@ model Transport {
 
 model Parking {
 	id              String @id @default(cuid())
+	parkingName 	String
 	parkingSpaces  Int
 	pricePerQuota Decimal @db.Money
+	coordinates String
 	booking		  Booking[]
 }
 
@@ -84,14 +87,31 @@ model Booking {
 	createdAt       DateTime @default(now())
 	bookingStart    DateTime
 	bookingEnd      DateTime
-	bookingQuotas   Int
-	paymentStatus   PaymentStatus @default(CREATED)
+	bookingQuotas   Decimal
+	cost 			Decimal @db.Money
+	payment			Payment[]
 	user            User @relation(fields: [userId], references: [id])
 	userId          String
 	transport 		Transport @relation(fields: [transportId], references: [id])
 	transportId		String
 	parking			Parking @relation(fields: [parkingId], references: [id])
 	parkingId		String
+}
+
+model Payment {
+	id 					String @id @default(cuid())
+	paymentId			String
+	status 				String
+	amount 				Decimal @db.Money
+	currency 			String
+	description 		String
+	user            	User @relation(fields: [userId], references: [id])
+	userId          	String
+	created_at 			DateTime
+	confirmation_url 	String
+	paid 				Boolean
+	booking				Booking @relation(fields: [bookingId], references: [id])
+	bookingId			String
 }
 
 

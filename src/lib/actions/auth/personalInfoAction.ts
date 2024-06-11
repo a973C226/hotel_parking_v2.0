@@ -27,7 +27,7 @@ export const personalInfoAction = async (userId: string, body: PersonalInfo, met
     if (method === "POST" && existingUserByUsername) {
         return { success: false, result: "Username уже используется" };
     }
-    if (method === "PUT" && existingUserByUsername?.id != userId) {
+    if (method === "PUT" && existingUserByUsername && existingUserByUsername.id != userId) {
         return { success: false, result: "Username уже используется" };
     }
 

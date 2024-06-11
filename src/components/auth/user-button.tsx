@@ -24,17 +24,14 @@ type UserButtonProps = {
 export const UserButton = ({user}: UserButtonProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex space-x-4 justify-between bg-slate-300/50 p-2 rounded-md min-w-36 items-center shadow-md">
+      <DropdownMenuTrigger className="flex space-x-2 justify-between p-0 sm:p-2 rounded-md items-center ">
             <div className="flex space-x-4 items-center">
                 <Avatar>
                     <AvatarImage src="" />
                     <AvatarFallback className="bg-sky-500">
-                        <FaUser className="text-white" />
+                        <FaUser className="text-white h-8 w-8" />
                     </AvatarFallback>
                 </Avatar>
-                <div className="font-normal italic text-lg">
-                    {user && user["username"]}
-                </div>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />

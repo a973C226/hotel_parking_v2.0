@@ -62,7 +62,6 @@ export const getFirstTransport = async (searchParams: SearchParams): Promise<Tra
 
 export const createTransport = async (data: any): Promise<Transport | null> => {
 	try {
-		console.error(data)
 		const createdTransport = await db.transport.create({
 			data: data
 		})

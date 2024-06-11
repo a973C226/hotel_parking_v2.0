@@ -22,13 +22,17 @@ import { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { Spinner } from "flowbite-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-
+import { Parking, Transport } from "@prisma/client";
+import { useParking } from "@/hooks/use-parkings";
+import { useDashboardContext } from "@/app/(protected)/dashboard/layout";
+import { AddButton } from "../transport/add-button";
 
 export const BookingCard = () => {
     const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition()
-	const [isLoading, setLoading] = useState<boolean>(false);
+	const [isLoading, setLoading] = useState<boolean>(false)
+    const [parkings, userTransport] = useDashboardContext()
 	const router = useRouter()
 
 	const form = useForm<z.infer<typeof bookingSchema>>({
@@ -49,14 +53,14 @@ export const BookingCard = () => {
 		startTransition(() => {
 			axiosInstance({
 				method: "POST",
-				url: "/api/auth/personal-info",
+				url: "/api/booking/create",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				data: values
 			}).then(function (response: AxiosResponse<any, any>) {
 				setSuccess(response.data.message)
-				router.push("/profile")
+                router.push(response.data.data)
 			}).catch((error) => {
 				setLoading(false);
 				setError(error.response.data.message)
@@ -116,26 +120,30 @@ export const BookingCard = () => {
                         <div>
                             <FormField
                                 control={form.control}
-                                name="parkingId"
+                                name="transportId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Парковка</FormLabel>
+                                        <FormLabel>Транспорт</FormLabel>
                                         <Select
                                             disabled={isPending}
                                             onValueChange={field.onChange}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="Выберите парковку" />
+                                                    <SelectValue placeholder="Выберите транспорт" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="male">
-                                                    Парковка 1
-                                                </SelectItem>
-                                                <SelectItem value="female">
-                                                    Парковка 2
-                                                </SelectItem>
+                                                {userTransport && userTransport.map((transport: Transport) => (
+                                                    <SelectItem key={transport.id} value={transport.id}>
+                                                        {transport.brand}
+                                                    </SelectItem>
+                                                ))}
+                                                <AddButton asChild>
+                                                    <Button className="m-2" size="sm" >
+                                                        Добавить транспорт
+                                                    </Button>
+                                                </AddButton>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -160,13 +168,11 @@ export const BookingCard = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="male">
-                                                    Парковка 1
-                                                </SelectItem>
-                                                <SelectItem value="female">
-                                                    Парковка 2
-                                                </SelectItem>
-                                                <Button>Добавить</Button>
+                                                {parkings && parkings.map((parking: Parking) => (
+                                                    <SelectItem key={parking.id} value={parking.id}>
+                                                        {parking.parkingName}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />

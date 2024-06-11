@@ -1,7 +1,7 @@
 "use client"
 
 import { UserButton } from "./auth/user-button"
-import { useLayoutContext } from "@/app/profile/layout";
+import { useLayoutContext } from "@/app/\(protected\)/layout";
 
 
 
