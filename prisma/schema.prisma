@@ -75,9 +75,11 @@ model Transport {
 model Parking {
 	id              String @id @default(cuid())
 	parkingName 	String
+	description		String
 	parkingSpaces  Int
 	pricePerQuota Decimal @db.Money
-	coordinates String
+	coord_x Float
+	coord_y Float
 	booking		  Booking[]
 }
 

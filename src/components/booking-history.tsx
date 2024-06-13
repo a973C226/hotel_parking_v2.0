@@ -3,6 +3,7 @@ import { useUserBookings } from "@/hooks/use-user-bookings";
 import { Booking } from "@prisma/client";
 import BookingHistoryCard from "./booking-history-card";
 import { useUserTransport } from "@/hooks/use-user-transport";
+import { Spinner } from "flowbite-react";
 
 export default function BookingHistory() {
     const [userBookings, setUserBooking]: any = useUserBookings()
@@ -16,7 +17,13 @@ export default function BookingHistory() {
                     ))}
                 </div>
             }
-            
+            {!userBookings && 
+                <div className="flex w-full h-full items-center justify-center">
+                    <div className="text-center">
+                        Загрузка... <Spinner aria-label="Center-aligned spinner example" size="lg" />
+                    </div>
+                </div>
+            }
         </div>
     )
 }

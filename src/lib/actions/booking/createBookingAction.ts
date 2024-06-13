@@ -27,16 +27,19 @@ export const createBookingAction = async (params: createBookingActionParams): Pr
     result: any;
 }> => {
     try {
-        const parsedBookingStart: any = new Date(params.bookingStart)
-        const parsedBookingEnd: any = new Date(params.bookingEnd)
-        const bookingQuotas = (parsedBookingEnd - parsedBookingStart) / 1000 / 60 / 60
+        const bookingStart: any = new Date(params.bookingStart)
+        const bookingEnd: any = new Date(params.bookingEnd)
+        const parsedBookingStart: any = bookingStart.toISOString()
+        const parsedBookingEnd: any = bookingEnd.toISOString()
+
+        const bookingQuotas = (bookingEnd - bookingStart) / 1000 / 60 / 60
         const parkingInfo = await getParkingById(params.parkingId)
         if (!parkingInfo) {
             return { success: false, result: "Ошибка создания брони. Не удалось получить информацию о парковке." }
         }
         const pricePerQuota = parseFloat(parkingInfo.pricePerQuota.toString())
         const cost = (pricePerQuota * bookingQuotas).toFixed(2)
-
+        
         const newBooking = await createBooking({
             ...params,
             bookingStart: parsedBookingStart,

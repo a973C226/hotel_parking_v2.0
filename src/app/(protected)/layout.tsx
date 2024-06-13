@@ -8,7 +8,7 @@ import { Spinner } from "flowbite-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const MyContext = createContext<any>(null);
+const ProtectedLayoutContext = createContext<any>(null);
 
 const ProtectedLayout = ({ 
 		children
@@ -16,13 +16,9 @@ const ProtectedLayout = ({
 		children: React.ReactNode
 	}) => {
     const user = useCurrentUser()
-	const url = usePathname()
-	const containerClassName = "h-full md:px-5 px-2 flex flex-col justify-between"
 	return ( 
-        <MyContext.Provider value={user}>
-            <div className={url === "/profile" ? containerClassName
-				: containerClassName + " bg-[url('https://www-europe.infiniti-cdn.net/content/dam/Infiniti/entryway/vehicles/qx50/2019/find-your-finish/QM1-lunar-white-swatch.jpg')] bg-cover"
-			}>
+        <ProtectedLayoutContext.Provider value={user}>
+            <div className="h-full md:px-5 px-2 flex flex-col justify-between">
                 <DashboardNavigation/>
                 {user && children}
 				{!user &&
@@ -34,12 +30,12 @@ const ProtectedLayout = ({
 				}
                 <Footer/>
             </div>
-        </MyContext.Provider>
+        </ProtectedLayoutContext.Provider>
     )
 }
 
 export function useLayoutContext() {
-    return useContext(MyContext);
+    return useContext(ProtectedLayoutContext);
 }
    
 export default ProtectedLayout;

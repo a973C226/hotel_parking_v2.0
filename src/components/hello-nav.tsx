@@ -17,13 +17,12 @@ const HelloNav = ({className}: HelloNavProps) => {
     
 
     return (
-        <nav className={cn("w-full px-0 z-50", className)}>
-            <div className="max-w-screen-3xl grid xl:grid-cols-3 grid-cols-2 items-center justify-between mx-4 p-4 rounded-lg">
-                <a href="https://flowbite.com/" className="place-self-start flex items-center space-x-3 rtl:space-x-reverse bg-slate-300/80 md:bg-transparent px-4 py-1 rounded-lg">
-                    <img src="https://flowbite.com/docs/images/logo.svg" className="h-6 mobile:h-8" alt="Flowbite Logo" />
-                    <span className="self-center text-xl mobile:text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+        <nav className={cn("w-full px-0 z-50 flex justify-center", className)}>
+            <div className="max-w-screen-3xl w-full grid xl:grid-cols-[1fr_auto_1fr] grid-cols-2 items-center justify-between mx-4 p-4 rounded-lg">
+                <a href="/" className="place-self-start flex items-center space-x-3 rtl:space-x-reverse bg-slate-300/80 md:bg-transparent px-4 py-1 rounded-lg">
+                    <img src="/logo.svg" className="h-8 mobile:h-10" alt="Logo" />
                 </a>
-                <button type="button" onClick={() => {setShowMiniMenu((prev) => {return prev ? false : true})}} className="place-self-end inline-flex items-center p-2 w-9 h-9 justify-center text-sm text-gray-500 rounded-lg xl:hidden bg-slate-300/80 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                <button type="button" onClick={() => {setShowMiniMenu((prev) => {return prev ? false : true})}} className="place-self-end inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg xl:hidden bg-slate-300/80 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
                     <span className="sr-only">Open main menu</span>
                     <svg className="mobile:w-5 mobile:h-5 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
@@ -32,18 +31,18 @@ const HelloNav = ({className}: HelloNavProps) => {
                 <div className="bg-slate-300/50 px-4 py-1 rounded-lg hidden xl:block place-self-center">
                     <ul className="font-medium flex gap-1 p-4 xl:p-0 mt-4 border rounded-lg xl:space-x-8 rtl:space-x-reverse xl:mt-0 xl:border-0 xl:bg-transparent">
                         <li>
-                            <a href="/auth/sign-up" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                            <a href="/prices" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
                                 Цены
                             </a>
                         </li>
                         <li>
-                            <a href="/auth/sign-up" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                            <a href="/route-to" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
                                 Как доехать?
                             </a>
                         </li>
                         <li>
-                            <a href="/auth/sign-up" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
-                                О нас
+                            <a href="/contacts" className="block px-3 2xl:px-5 py-1 text-lg 2xl:text-xl font-bold text-gray-900 bg-transparent rounded hover:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                                Контакты
                             </a>
                         </li>
                     </ul>

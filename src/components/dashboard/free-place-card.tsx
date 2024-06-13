@@ -87,12 +87,13 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
                     className="space-y-6"
                 >
                     <div className="space-y-4">
-                        <div className="flex justify-between space-x-4">
+                        <div className="flex flex-col sm:flex-row sm:gap-4 justify-between">
                             <FormField
                                 control={form.control}
                                 name="datetimeFrom"
                                 render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Начало</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
@@ -105,12 +106,12 @@ export const FreePlaceCard = (props: FreePlaceCardProps) => {
                                 </FormItem>
                                 )}
                             />
-                            <div> - </div>
                             <FormField
                                 control={form.control}
                                 name="datetimeTo"
                                 render={({ field }) => (
                                     <FormItem>
+                                        <FormLabel>Окончание</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}

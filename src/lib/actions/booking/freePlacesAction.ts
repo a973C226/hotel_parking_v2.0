@@ -11,26 +11,118 @@ interface freePlacesActionParams {
 
 export const freePlacesAction = async ({datetimeFrom, datetimeTo, parkingId}: freePlacesActionParams) => {
     try {
-        const parsedDatetimeFrom = new Date(datetimeFrom)
-        const parsedDatetimeTo = new Date(datetimeTo)
-        
+        const parsedDatetimeFrom = new Date(datetimeFrom).toISOString()
+        const parsedDatetimeTo = new Date(datetimeTo).toISOString()
+
+        const firstCheck = {
+            AND: [
+                {
+                    bookingStart: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeTo
+                    }
+                },
+            ]
+        }
+
+        const secondCheck = {
+            AND: [
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingEnd: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+            ]
+        }
+
+        const thirdCheck = {
+            AND: [
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeTo
+                    }
+                },
+            ]
+        }
+
+        const fourthCheck = {
+            AND: [
+                {
+                    bookingStart: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingStart: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+                {
+                    bookingEnd: {
+                        gte: parsedDatetimeFrom
+                    }
+                },
+                {
+                    bookingEnd: {
+                        lte: parsedDatetimeTo
+                    }
+                },
+            ]
+        }
+
         const bookings = await getBookingWhere({
             AND: [
                 {
                     OR: [
-                        {
-                            bookingStart: {
-                                gte: parsedDatetimeFrom,
-                                lte: parsedDatetimeTo,
-                            },
-                        },
-                        {
-                            bookingEnd: {
-                                gte: parsedDatetimeFrom,
-                                lte: parsedDatetimeTo,
-                            },
-                        },
-                    ],
+                        { ...firstCheck },
+                        { ...secondCheck },
+                        { ...thirdCheck },
+                        { ...fourthCheck }
+                    ]
                 },
                 {
                     parkingId: parkingId,
@@ -51,7 +143,11 @@ export const freePlacesAction = async ({datetimeFrom, datetimeTo, parkingId}: fr
             return { success: false, result: "Не удалось получить информацию о парковке." }
         }
         
-        const freePlacesCount = parking.parkingSpaces - bookingsCount
+        let freePlacesCount = parking.parkingSpaces - bookingsCount
+        if (freePlacesCount < 0) {
+            freePlacesCount = 0
+        }
+        
         return { success: true, result: freePlacesCount }
     } catch (err) {
         logger.log({

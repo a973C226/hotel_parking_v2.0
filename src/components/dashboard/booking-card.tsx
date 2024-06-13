@@ -80,12 +80,13 @@ export const BookingCard = () => {
                     className="space-y-6"
                 >
                     <div className="space-y-4">
-                        <div className="flex justify-between space-x-4">
+                        <div className="flex flex-col sm:flex-row sm:gap-4 justify-between">
                             <FormField
                                 control={form.control}
                                 name="bookingStart"
                                 render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Начало</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
@@ -98,12 +99,12 @@ export const BookingCard = () => {
                                 </FormItem>
                                 )}
                             />
-                            <div> - </div>
                             <FormField
                                 control={form.control}
                                 name="bookingEnd"
                                 render={({ field }) => (
                                     <FormItem>
+                                        <FormLabel>Окончание</FormLabel>
                                         <FormControl>
                                         <Input
                                             {...field}
@@ -140,7 +141,7 @@ export const BookingCard = () => {
                                                     </SelectItem>
                                                 ))}
                                                 <AddButton asChild>
-                                                    <Button className="m-2" size="sm" >
+                                                    <Button className="m-2" >
                                                         Добавить транспорт
                                                     </Button>
                                                 </AddButton>

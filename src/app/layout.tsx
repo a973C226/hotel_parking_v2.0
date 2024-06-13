@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ru">
-			<body className={inter.className}>
+			<body className={inter.className + " bg-[url('https://www-europe.infiniti-cdn.net/content/dam/Infiniti/entryway/vehicles/qx50/2019/find-your-finish/QM1-lunar-white-swatch.jpg')] bg-cover bg-fixed"}>
 				<Providers>
 					<Suspense fallback={
 						<div className="flex w-full h-full items-center justify-center">

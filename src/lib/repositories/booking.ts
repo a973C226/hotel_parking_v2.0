@@ -51,7 +51,10 @@ export const getUserBookings = async (userId: string) => {
             },
             where: {
                 userId: userId
-            }
+            },
+            orderBy: {
+                bookingStart: "desc"
+            },
         })
         if (!result) {
             return null

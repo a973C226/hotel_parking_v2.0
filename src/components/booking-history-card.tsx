@@ -24,6 +24,18 @@ interface BookingHistoryCardProps {
     setBooking: (value: SetStateAction<Booking[] | null>) => void;
 }
 
+const bookingStatusText = new Map([
+    ["CREATED","СОЗДАНО"],
+    ["PAID", "ОПЛАЧЕНО"],
+    ["CANCELED", "ОТМЕНЕНО"]
+])
+
+const bookingStatusColor = new Map([
+    ["CREATED","text-yellow-400"],
+    ["PAID", "text-lime-500"],
+    ["CANCELED", "text-rose-600"]
+])
+
 export default function BookingHistoryCard({booking, setBooking}: BookingHistoryCardProps) {
     const [isDisabled, setDisabled] = useState(true)
     const [error, setError] = useState<string | undefined>("")
@@ -78,22 +90,22 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
                 <Accordion.Panel>
                     <Accordion.Title className="max-h-14">
                         <div className="flex gap-4">
-                            <div className="text-sm sm:text-base">
+                            <div className="text-sm sm:text-base truncate">
                                 {booking.parking.parkingName}
                             </div>
                             <div className="mx-2 flex gap-4">
-                                <div className="text-sm sm:text-base hidden sm:block">
+                                <div className="text-sm sm:text-base hidden sm:block truncate">
                                     {parsedBookingStart}
                                 </div>
                                 <div className="text-sm sm:text-base hidden md:block">
                                     -
                                 </div>
-                                <div className="text-sm sm:text-base hidden md:block">
+                                <div className="text-sm sm:text-base hidden md:block truncate">
                                     {parsedBookingEnd}
                                 </div>
                             </div>
-                            <div className="text-sm sm:text-base">
-                                {booking.status}
+                            <div className={"text-sm sm:text-base " + bookingStatusColor.get(booking.status)}>
+                                {bookingStatusText.get(booking.status)}
                             </div>
                         </div>
                     </Accordion.Title>

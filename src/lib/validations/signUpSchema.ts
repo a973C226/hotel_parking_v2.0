@@ -7,9 +7,14 @@ export const signUpSchema = z.object({
     password: z.string().min(6, {
         message: "Пароль должен содержать больше 6 символов.",
     }),
-    confirmPassword: z.string()
+    confirmPassword: z.string(),
+    personalDataSwitch: z.boolean()
 })
 .refine((data) => data.password === data.confirmPassword, {
     message: "Пароли не совпадают.",
 	path: ["confirmPassword"]
+})
+.refine((data) => data.personalDataSwitch === true, {
+    message: "",
+	path: ["personalDataSwitch"]
 });

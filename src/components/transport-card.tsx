@@ -74,7 +74,7 @@ export const TransportCard = ({transport, setTransport}: TransportCardProps) => 
                                         <FaTruckMonster className="text-white" />
                                     </AvatarFallback>
                                 </Avatar>
-                                <div className="text-sm sm:text-base">
+                                <div className="text-sm sm:text-lg">
                                     {transport?.brand}
                                 </div>
                             </div>

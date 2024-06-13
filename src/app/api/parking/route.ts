@@ -10,19 +10,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try{
-        const session = await isVerifiedToken(request.headers.get("Authorization"))
-        if (!session) {
-            return new NextResponse(
-                JSON.stringify({ message: "unauthorized" }),
-                { 
-                    status: statusCode.StatusUnauthorized,
-                    headers: { 
-                        "Content-Type": "application/json",
-                        Accept: "application/json"
-                    }
-                },
-            )
-        }
         const parkings = await getAllParkings()
 
         if (parkings === null) {
