@@ -7,7 +7,20 @@ import { isVerifiedToken } from "@/lib/utils/auth";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
-        const refreshSession = await isVerifiedToken(request.headers.get("Authorization"))
+        const token = request.headers.get("Authorization")
+        if (!token) {
+            return new NextResponse(
+                JSON.stringify({ message: "Ошибка обновления токена." }),
+                { 
+                    status: statusCode.StatusBadRequest,
+                    headers: { 
+                        "Content-Type": "application/json",
+                        Accept: "application/json"
+                    }
+                },
+            );
+        }
+        const refreshSession = await isVerifiedToken(token)
         if (!refreshSession) {
             logger.log({
                 level: "error",

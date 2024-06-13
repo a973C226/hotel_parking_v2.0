@@ -75,18 +75,18 @@ const HelloNav = ({className}: HelloNavProps) => {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                        <a href="/prices" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
                             Цены
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                        <a href="/route-to" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
                             Как доехать?
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
-                            О нас
+                        <a href="/contacts" className="block px-5 py-1 text-lg mobile:text-xl font-bold text-gray-900 bg-transparent rounded focus:bg-slate-300/80 xl:border-0 xl:hover:text-blue-700" aria-current="page">
+                            Контакты
                         </a>
                     </li> 
                 </ul>

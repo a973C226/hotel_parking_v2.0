@@ -3,6 +3,7 @@ import { Button } from "./ui/button"
 import { Card } from "./ui/card"
 
 interface PriceCardProps {
+    isAuth: any;
     parking: Parking;
 }
 
@@ -18,7 +19,7 @@ export const PriceCard = (props: PriceCardProps) => {
                 <p className="text-xl p-6">{parking.description}</p>
             </div>
             <div className="flex justify-center py-6">
-                <a href="/dashboard#booking"><Button className="bg-sky-400 hover:bg-sky-700 text-xl xl:text-2xl py-6 rounded-3xl" size={"lg"}>Забронировать</Button></a>
+                <a href={props.isAuth ? "/dashboard#booking" : "/auth/sign-in"}><Button className="bg-sky-400 hover:bg-sky-700 text-xl xl:text-2xl py-6 rounded-3xl" size={"lg"}>Забронировать</Button></a>
             </div>
         </Card>
     )

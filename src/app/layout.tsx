@@ -29,7 +29,6 @@ export default function RootLayout({
 							</div>
 						</div>
 					}>
-						<Toaster />
 						{children}
 					</Suspense>
 				</Providers>

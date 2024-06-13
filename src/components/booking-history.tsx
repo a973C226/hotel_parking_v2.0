@@ -15,6 +15,7 @@ export default function BookingHistory() {
                     {userBookings.map((booking: Booking) => (
                         <BookingHistoryCard booking={booking} setBooking={setUserBooking}/>
                     ))}
+                    {userBookings.length==0 && <div className="text-center">Бронирований нет</div>}
                 </div>
             }
             {!userBookings && 

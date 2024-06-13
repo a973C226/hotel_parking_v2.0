@@ -60,7 +60,7 @@ export const PersonalInfoForm = () => {
 				data: values
 			}).then(function (response: AxiosResponse<any, any>) {
 				setSuccess(response.data.message)
-				router.push("/profile")
+				router.push("/dashboard")
 			}).catch((error) => {
 				setLoading(false);
 				setError(error.response.data.message)
