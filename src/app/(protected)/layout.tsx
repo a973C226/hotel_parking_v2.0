@@ -1,12 +1,11 @@
 "use client"
+
 import Footer from "@/components/footer";
-import Navigation from "@/components/start-navigation";
-import { createContext, createServerContext, Suspense, useContext } from "react";
-import { YMaps, Map } from '@pbe/react-yandex-maps';
+import { createContext, useContext } from "react";
 import DashboardNavigation from "@/components/dashboard-nav";
 import { Spinner } from "flowbite-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 
 const ProtectedLayoutContext = createContext<any>(null);
 

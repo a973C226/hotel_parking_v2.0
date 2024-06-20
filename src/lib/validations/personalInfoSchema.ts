@@ -22,4 +22,4 @@ export const personalInfoSchema = z.object({
     phoneNumber: z.custom<`${string}`>((val) => {
         return typeof val === "string" ? /^\+?[78][-\(]?\d{3}\)?-?\d{3}-?\d{2}-?\d{2}$/.test(val) : false;
     }, "Некорректный номер телефона"),
-}) // 
+})

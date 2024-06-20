@@ -18,6 +18,7 @@ import { DeleteButton } from "./transport/delete-button";
 import { Booking, Parking, Transport } from "@prisma/client";
 import { bookingSchema } from "@/lib/validations/bookingSchema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { DeleteBookingButton } from "./delete-booking-button";
 
 interface BookingHistoryCardProps {
     booking: any;
@@ -211,22 +212,18 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
                                 </div>
                                 <FormError message={error} />
                                 <FormSuccess message={success} />
-                                {/* <Button
-                                    disabled={isLoading}
-                                    type="submit"
-                                    className="w-full flex space-x-2"
-                                >
-                                    {isLoading && (<Spinner aria-label="Alternate spinner button example" size="sm" />)}
-                                    <p>{isLoading ? "Загрузка..." : "Проверить"}</p>
-                                </Button> */}
                             </form>
                         </Form>
-                        {/* {isDisabled && 
+                        {isDisabled && 
                             <div className="flex w-full gap-4 mt-4">
-                                <Button onClick={() => {setDisabled(() => {return false})}}>Редактировать</Button>
-                                <DeleteButton id={transport.id} setError={setError} setSuccess={setSuccess} setLoading={setLoading} setTransport={setTransport}/>
+                                {booking.status==="CREATED" && <Button variant="secondary" className="bg-lime-500 hover:bg-lime-500/50">Оплатить</Button>}
+                                <DeleteBookingButton id={booking.id} setError={setError} setSuccess={setSuccess} setLoading={setLoading} setBooking={setBooking}>
+                                    <Button variant="destructive">
+                                        Отменить бронь
+                                    </Button>
+                                </DeleteBookingButton>
                             </div>
-                        } */}
+                        }
                     </Accordion.Content>
                 </Accordion.Panel>
             </Accordion>

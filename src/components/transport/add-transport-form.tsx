@@ -25,8 +25,6 @@ export const AddTransportForm = () => {
 	const [success, setSuccess] = useState<string | undefined>("")
     const [isLoading, setLoading] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition()
-    const [isCanceled, setIsCanceled] = useState(false)
-    const router = useRouter()
     const form = useForm<z.infer<typeof transportInfoSchema>>({
 		resolver: zodResolver(transportInfoSchema),
 		defaultValues: {

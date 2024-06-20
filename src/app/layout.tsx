@@ -9,8 +9,8 @@ import { Spinner } from "flowbite-react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Парковки Wone Hotels",
-	description: "Бронирование парковочных мест в отелях Wone Hotels",
+	title: "Парковки Hotel parking",
+	description: "Бронирование парковочных мест",
 };
 
 export default function RootLayout({

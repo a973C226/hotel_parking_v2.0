@@ -12,7 +12,6 @@ interface DeleteButtonProps {
     setTransport: (value: SetStateAction<Transport[] | null>) => void;
 }
 
-
 export const DeleteButton = (props: DeleteButtonProps) => {
     const [isPending, startTransition] = useTransition()
     const deleteTransport = () => {

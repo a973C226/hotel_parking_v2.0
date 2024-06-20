@@ -4,7 +4,6 @@ import { UserButton } from "./auth/user-button"
 import { useLayoutContext } from "@/app/\(protected\)/layout";
 
 
-
 export default function DashboardNavigation() {
     const user = useLayoutContext();
 

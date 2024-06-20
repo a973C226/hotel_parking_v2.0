@@ -1,24 +1,11 @@
 "use client"
 
-import * as z from "zod";
-import DashboardNavigation from "@/components/dashboard-nav";
-import MapLocationRadio from "@/components/dashboard/map-location-radio";
 import ProfileHead from "@/components/dashboard/profile-head";
 import { Card } from "@/components/ui/card";
-import YandexMap from "@/components/ui/yandex-map";
 import { UserInfo } from "@/components/user-info";
-import { useWaitQuery } from "@/hooks/use-wait-query";
-import { personalInfoSchema } from "@/lib/validations/personalInfoSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Accordion, Button, Spinner } from "flowbite-react";
-import { useContext, useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
-import { useRouter, useSearchParams } from "next/navigation";
-import axiosInstance from "@/lib/axios";
-import { AxiosResponse } from "axios";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { Spinner } from "flowbite-react";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLayoutContext } from "@/app/\(protected\)/layout";
 import { UserTransport } from "@/components/user-transport";
 import BookingHistory from "@/components/booking-history";
@@ -28,19 +15,7 @@ export default function Profile() {
     const searchParams = useSearchParams()
     const state = searchParams.get("state")
     const [cardState, setCardState] = useState(state ?? "1")
-    console.log(cardState)
-    const [disabledCard, setDisabled] = useState(true)
-    const [error, setError] = useState<string | undefined>("")
-	const [success, setSuccess] = useState<string | undefined>("")
-	const [isPending, startTransition] = useTransition()
-	const [isLoading, setLoading] = useState<boolean>(false);
     const user = useLayoutContext()
-
-    
-
-    const setDisabledUserInfo = (value: boolean) => {
-        setDisabled(() => {return value})
-    }
 	return (
         <div>
             {user && 

@@ -17,7 +17,7 @@ export const ContactsCard = () => {
                         <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Телефон: +7 (999) 456-7890</p>
                         <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Telegram: @hotel_parking</p>
                         <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Почта: info@hotelparking.com</p>
-                        <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Адрес: Санкт-Петербург, Шкиперский пр., 15</p>
+                        <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Адрес: Санкт-Петербург, наб. реки Мойки, 61</p>
                         <p className="text-base lg:text-lg 2xl:text-2xl font-semibold">Часы работы: Пн-Пт: 9:00 - 18:00</p>
                     </div>
                     <div className="border-sky-400 border-b-2 border-r-2 border-l-2 xl:border-none rounded-b-xl xl:rounded-xl" id="map"><YandexMap coords={[59.934972, 30.318075]} width={window.innerWidth-40} height={window.innerHeight/1.5}/></div>

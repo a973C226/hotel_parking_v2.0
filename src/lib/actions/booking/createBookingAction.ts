@@ -1,4 +1,3 @@
-import axiosInstance from "@/lib/axios";
 import { logger } from "@/lib/logger";
 import { createBooking } from "@/lib/repositories/booking";
 import { getParkingById } from "@/lib/repositories/parking";
@@ -7,14 +6,11 @@ import { getBaseURL } from "@/lib/utils/config";
 import axios from "axios";
 import { encode, decode } from 'js-base64';
 import { v4 as uuidv4 } from 'uuid';
+import { freePlacesAction } from "./freePlacesAction";
 
 interface createBookingActionParams {
-    // status?: string;
-    // createdAt?: Date;
     bookingStart: string;
     bookingEnd: string;
-    // bookingQuotas?: number;
-    // paymentStatus?: string;
     userId: string;
     transportId: string;
     parkingId: string;
@@ -27,6 +23,20 @@ export const createBookingAction = async (params: createBookingActionParams): Pr
     result: any;
 }> => {
     try {
+        const checkFreePlaces = await freePlacesAction(
+            {
+                datetimeFrom: params.bookingStart,
+                datetimeTo: params.bookingEnd,
+                parkingId : params.parkingId
+            }
+        )
+        if (!checkFreePlaces.success) {
+            return { success: false, result: "Ошибка создания брони. Не удалось получить информацию о свободных местах." }
+        }
+        if (checkFreePlaces.result === 0) {
+            return { success: false, result: "Ошибка создания брони. Нет свободных мест на указанные даты." }
+        }
+
         const bookingStart: any = new Date(params.bookingStart)
         const bookingEnd: any = new Date(params.bookingEnd)
         const parsedBookingStart: any = bookingStart.toISOString()

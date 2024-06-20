@@ -13,4 +13,4 @@ export const transportInfoSchema = z.object({
     licensePlate: z.string().min(1, {
         message: "Введите номерной знак ТС.",
     }),
-  });
+});

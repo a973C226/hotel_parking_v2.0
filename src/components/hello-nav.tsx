@@ -14,7 +14,6 @@ interface HelloNavProps {
 
 const HelloNav = ({className}: HelloNavProps) => {
     const [showMiniMenu, setShowMiniMenu] = useState<boolean>(false);
-    
 
     return (
         <nav className={cn("w-full px-0 z-50 flex justify-center", className)}>

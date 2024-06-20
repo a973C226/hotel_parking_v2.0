@@ -7,7 +7,7 @@ type ProfileHeadProps = {
 }
 
 export default function ProfileHead({user}: ProfileHeadProps) {
-    const userBookings = useUserBookings()
+    const [userBookings, setBooking] = useUserBookings()
     const [userTransport, _] = useUserTransport()
     return (
         <div className="flex flex-col justify-center items-center gap-10">

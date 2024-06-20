@@ -1,10 +1,7 @@
-import axiosInstance from "@/lib/axios";
-import { AxiosResponse } from "axios";
-import { SetStateAction, useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { useUserTransport } from "@/hooks/use-user-transport";
 import { TransportCard } from "./transport-card";
-import { Accordion, Spinner } from "flowbite-react";
+import { Spinner } from "flowbite-react";
 import { Transport } from "@prisma/client";
 import { AddButton } from "./transport/add-button";
 

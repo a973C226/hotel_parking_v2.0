@@ -33,16 +33,12 @@ interface FreePlaceCardProps {
 }
 
 export const FreePlaceCard = (props: FreePlaceCardProps) => {
-    const [datetimeFromState, setDatetimeFrom] = props.datetimeFrom
-	const [datetimeToState, setDatetimeTo] = props.datetimeTo
-	const [parkingState, setParking] = props.parking
     const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition()
 	const [isLoading, setLoading] = useState<boolean>(false);
     const [freePlaces, setFreePlaces] = useState<number | null>(null);
     const [parkings, _] = useDashboardContext()
-	const router = useRouter()
 
 	const form = useForm<z.infer<typeof freePlaceSchema>>({
 		resolver: zodResolver(freePlaceSchema),

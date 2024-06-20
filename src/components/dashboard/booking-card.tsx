@@ -190,7 +190,7 @@ export const BookingCard = () => {
                         className="w-full flex space-x-2"
                     >
                         {isLoading && (<Spinner aria-label="Alternate spinner button example" size="sm" />)}
-                        <p>{isLoading ? "Загрузка..." : "Проверить"}</p>
+                        <p>{isLoading ? "Загрузка..." : "Оформить"}</p>
                     </Button>
                 </form>
             </Form>

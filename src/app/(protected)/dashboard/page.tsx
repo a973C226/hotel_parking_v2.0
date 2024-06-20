@@ -1,28 +1,11 @@
 "use client"
 
-import DashboardNavigation from "@/components/dashboard-nav";
 import { BookingCard } from "@/components/dashboard/booking-card";
 import { FreePlaceCard } from "@/components/dashboard/free-place-card";
 import MapLocationRadio from "@/components/dashboard/map-location-radio";
-import { HelloCard } from "@/components/hello-card";
 import { Prices } from "@/components/prices";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import YandexMap from "@/components/ui/yandex-map";
-import { UserInfo } from "@/components/user-info";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { useParking } from "@/hooks/use-parkings";
-import { useWaitQuery } from "@/hooks/use-wait-query";
-import { useEffect, useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
+import { useState } from "react";
 import { useDashboardContext } from "./layout";
-
-
-const hotelsCoords = new Map<string, number[]>([
-	["palace-bridge-hotel", [59.944559, 30.293485]],
-	["vasilievsky-hotel", [59.937382, 30.282361]],
-	["olympia-garden-hotel", [59.913541, 30.320638]]
-])
 
 export default async function Dashboard() {
 	const [parkingState, setParking] = useState<string>("")

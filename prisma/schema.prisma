@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-	provider        = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
@@ -21,12 +21,6 @@ enum BookingStatus {
 	PAID
 	CANCELED
 	ARCHIVED
-}
-
-enum PaymentStatus {
-	CREATED
-	PAID
-	CANCELED
 }
 
 model User {
