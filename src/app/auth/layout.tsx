@@ -1,6 +1,5 @@
 import Footer from "@/components/footer";
 import { HelloNav } from "@/components/hello-nav";
-import StartNavigation from "@/components/start-navigation";
 
 const AuthLayout = ({ 
 		children

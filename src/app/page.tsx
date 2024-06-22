@@ -1,6 +1,5 @@
 import { HelloCard } from "@/components/hello-card";
 import { HelloNav } from "@/components/hello-nav";
-import { useRouter } from "next/navigation";
 
 export default function StartPage() {
 	return (

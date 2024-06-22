@@ -2,7 +2,6 @@ import axiosInstance from "@/lib/axios";
 import { AxiosResponse } from "axios";
 import { SetStateAction, useTransition } from "react";
 import { Button } from "./ui/button";
-import { Booking } from "@prisma/client";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog"
 import { CardWrapper } from "./auth/card-wrapper";
 import { Spinner } from "flowbite-react";

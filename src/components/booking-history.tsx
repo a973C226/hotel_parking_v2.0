@@ -1,8 +1,6 @@
-import { useParking } from "@/hooks/use-parkings";
 import { useUserBookings } from "@/hooks/use-user-bookings";
 import { Booking } from "@prisma/client";
 import BookingHistoryCard from "./booking-history-card";
-import { useUserTransport } from "@/hooks/use-user-transport";
 import { Spinner } from "flowbite-react";
 
 export default function BookingHistory() {

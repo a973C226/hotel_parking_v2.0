@@ -1,7 +1,6 @@
 import { logger } from "@/lib/logger";
 import { getBookingWhere } from "@/lib/repositories/booking";
 import { getParkingById } from "@/lib/repositories/parking";
-import { count } from "console";
 
 interface freePlacesActionParams {
     datetimeFrom: string;

@@ -1,15 +1,7 @@
 import * as z from "zod";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { PrismaClient } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
-import { useRef, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { personalInfoSchema } from "@/lib/validations/personalInfoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +9,6 @@ import axiosInstance from "@/lib/axios";
 import { AxiosResponse } from "axios";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
-import { isDataView } from "util/types";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Spinner } from "flowbite-react";

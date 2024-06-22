@@ -1,11 +1,6 @@
-import { deleteTransportAction } from "@/lib/actions/transport/deleteTransportAction";
-import { transportInfoAction } from "@/lib/actions/transport/transportInfoAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
 import { getAllParkings } from "@/lib/repositories/parking";
-import { getManyTransports } from "@/lib/repositories/transport";
-import { isVerifiedToken } from "@/lib/utils/auth";
-import { transportInfoSchema } from "@/lib/validations/transportInfoSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {

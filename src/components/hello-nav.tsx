@@ -1,11 +1,5 @@
 "use client"
 import { cn } from '@/lib/utils/cn';
-import { Collapse } from 'flowbite';
-import type { CollapseOptions, CollapseInterface } from 'flowbite';
-import type { InstanceOptions } from 'flowbite';
-import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
-import Link from 'next/link';
-import Script from 'next/script';
 import { useState } from 'react';
 
 interface HelloNavProps {

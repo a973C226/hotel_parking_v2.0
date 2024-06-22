@@ -1,7 +1,5 @@
 import { Parking } from "@prisma/client"
 import { PriceCard } from "./price-card"
-import { Button } from "./ui/button"
-import { Card } from "./ui/card"
 import { useCheckAuth } from "@/hooks/use-check-auth";
 
 interface PricesProps {

@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import { getUserByEmail } from "@/lib/repositories/user";
 import { logger } from "@/lib/logger";
 import { generateJwtToken } from "@/lib/utils/jwt";
-import { db } from "@/lib/db";
 
 type User = {
     email: string,

@@ -2,9 +2,7 @@
 import DashboardNavigation from "@/components/dashboard-nav";
 import Footer from "@/components/footer";
 import { HelloNav } from "@/components/hello-nav";
-import StartNavigation from "@/components/start-navigation";
 import { useCheckAuth } from "@/hooks/use-check-auth";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { useParking } from "@/hooks/use-parkings";
 import { createContext, useContext } from "react";
 

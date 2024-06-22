@@ -1,7 +1,6 @@
 import { freePlacesAction } from "@/lib/actions/booking/freePlacesAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
-import { getUserByID } from "@/lib/repositories/user";
 import { isVerifiedToken } from "@/lib/utils/auth";
 import { NextRequest, NextResponse } from "next/server";
 

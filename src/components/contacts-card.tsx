@@ -1,6 +1,5 @@
 import { YMaps } from "@pbe/react-yandex-maps"
 import YandexMap from "./ui/yandex-map"
-import { Card } from "./ui/card"
 
 export const ContactsCard = () => {
     return (
@@ -10,7 +9,6 @@ export const ContactsCard = () => {
             load: "Map,Placemark,control.ZoomControl,control.FullscreenControl,geoObject.addon.balloon",
         }} >
             <div className="flex flex-col items-center">
-                {/* <h1 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-5xl dark:text-white">Наши контакты</h1> */}
                 <div className="flex flex-col xl:flex-row items-center">
                     <div className="border-sky-400 border-t-2 border-r-2 border-l-2 xl:border-none xl:z-50 w-full xl:w-auto xl:absolute bg-white xl:ml-10 px-10 py-6 xl:bg-slate-50/80 rounded-t-xl xl:rounded-xl space-y-1">
                         <h1 className="text-xl lg:text-2xl 2xl:text-4xl font-bold mb-4 2xl:mb-6">Наши контакты</h1>

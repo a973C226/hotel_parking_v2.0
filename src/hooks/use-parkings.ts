@@ -1,7 +1,7 @@
 "use client"
 import axiosInstance from "@/lib/axios";
-import { Parking, Transport } from "@prisma/client";
-import React, { useState, useEffect } from "react";
+import { Parking } from "@prisma/client";
+import { useState, useEffect } from "react";
 
 
 export const useParking = () => {

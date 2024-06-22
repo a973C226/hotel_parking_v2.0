@@ -1,7 +1,7 @@
 "use server";
 
 import { logger } from "@/lib/logger";
-import { createTransport, getUniqueTransport, updateUniqueTransport } from "@/lib/repositories/transport";
+import { getUniqueTransport, updateUniqueTransport } from "@/lib/repositories/transport";
 
 interface TransportInfo {
     id: string;

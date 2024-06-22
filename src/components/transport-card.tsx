@@ -1,14 +1,13 @@
 import * as z from "zod";
 import { FaTruckMonster } from "react-icons/fa"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Card } from "./ui/card"
-import { Accordion, AccordionPanelProps } from "flowbite-react"
+import { Accordion } from "flowbite-react"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { transportInfoSchema } from "@/lib/validations/transportInfoSchema";
-import { FC, useState, SetStateAction, useTransition } from "react";
+import { useState, SetStateAction, useTransition } from "react";
 import { Button } from "./ui/button";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";

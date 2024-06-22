@@ -4,7 +4,6 @@ import { YMaps } from "@pbe/react-yandex-maps";
 import { Parking } from "@prisma/client";
 import { useState } from "react";
 import YandexMap from "../ui/yandex-map";
-import { Decimal } from "@prisma/client/runtime/library";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface MapLocationRadioProps {

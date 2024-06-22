@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { transportInfoSchema } from "@/lib/validations/transportInfoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SetStateAction, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
@@ -15,8 +15,6 @@ import axiosInstance from "@/lib/axios";
 import { AxiosResponse } from "axios";
 import { Spinner } from "flowbite-react";
 import { DialogClose } from "../ui/dialog";
-import { Transport } from "@prisma/client";
-import { useRouter } from "next/navigation";
 
 
 export const AddTransportForm = () => {

@@ -1,4 +1,4 @@
-import { YMaps, Map, ZoomControl, Placemark, RouteEditor, RoutePanel } from '@pbe/react-yandex-maps';
+import { Map, ZoomControl, Placemark } from '@pbe/react-yandex-maps';
 
 type MapProps = {
     coords: number[],

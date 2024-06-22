@@ -1,6 +1,6 @@
 "use client"
 import axiosInstance from "@/lib/axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 
 export const useCurrentUser = () => {

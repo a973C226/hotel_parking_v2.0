@@ -1,7 +1,6 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import { ExitIcon } from "@radix-ui/react-icons"
 
 import {
 	DropdownMenu,
@@ -15,7 +14,6 @@ import {
 	AvatarFallback,
 } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { Button } from "flowbite-react";
 
 type UserButtonProps = {
 	user: any;

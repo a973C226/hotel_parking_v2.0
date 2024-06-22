@@ -1,4 +1,4 @@
-import { Prisma, Transport } from "@prisma/client";
+import { Transport } from "@prisma/client";
 import { db } from "../db";
 import { logger } from "../logger";
 

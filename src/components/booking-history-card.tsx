@@ -1,21 +1,15 @@
 import * as z from "zod";
-import { FaTruckMonster } from "react-icons/fa"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Card } from "./ui/card"
-import { Accordion, AccordionPanelProps, Spinner } from "flowbite-react"
+import { Accordion } from "flowbite-react"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { transportInfoSchema } from "@/lib/validations/transportInfoSchema";
-import { FC, useState, SetStateAction, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import axiosInstance from "@/lib/axios";
 import { AxiosResponse } from "axios";
-import { DeleteButton } from "./transport/delete-button";
-import { Booking, Parking, Transport } from "@prisma/client";
 import { bookingSchema } from "@/lib/validations/bookingSchema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { DeleteBookingButton } from "./delete-booking-button";

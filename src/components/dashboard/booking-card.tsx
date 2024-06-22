@@ -23,7 +23,6 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "flowbite-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Parking, Transport } from "@prisma/client";
-import { useParking } from "@/hooks/use-parkings";
 import { useDashboardContext } from "@/app/(protected)/dashboard/layout";
 import { AddButton } from "../transport/add-button";
 

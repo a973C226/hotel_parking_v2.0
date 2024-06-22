@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { signUpAction } from "@/lib/actions/auth/signUpAction";
-import { sendVerificationEmailToken } from "@/lib/actions/token/sendVerificationEmailToken";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
 import { signUpSchema } from "@/lib/validations/signUpSchema";
