@@ -52,7 +52,25 @@ export const getLastPaymentByBookingId = async (bookingId: string) => {
         }
         return payment
     } catch(err) {
-        logger.error(`[createPayment] error: ${err}`)
+        logger.error(`[getLastPaymentByBookingId] error: ${err}`)
+		return null
+    }
+}
+
+export const getLastPaymentWhere = async (searchParams: any) => {
+    try {
+        const payments = db.payment.findMany({
+            where: searchParams,
+            orderBy: {
+                created_at: "desc"
+            }
+        })
+        if (!payments) {
+            null
+        }
+        return payments
+    } catch(err) {
+        logger.error(`[getLastPaymentWhere] error: ${err}`)
 		return null
     }
 }

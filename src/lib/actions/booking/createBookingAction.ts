@@ -4,7 +4,7 @@ import { getParkingById } from "@/lib/repositories/parking";
 import { createPayment } from "@/lib/repositories/payment";
 import { getBaseURL } from "@/lib/utils/config";
 import axios from "axios";
-import { encode, decode } from 'js-base64';
+import { encode } from 'js-base64';
 import { v4 as uuidv4 } from 'uuid';
 import { freePlacesAction } from "./freePlacesAction";
 

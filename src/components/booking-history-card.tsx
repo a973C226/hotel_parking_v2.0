@@ -19,10 +19,10 @@ import { Booking, Parking, Transport } from "@prisma/client";
 import { bookingSchema } from "@/lib/validations/bookingSchema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { DeleteBookingButton } from "./delete-booking-button";
+import { useRouter } from "next/navigation";
 
 interface BookingHistoryCardProps {
     booking: any;
-    setBooking: (value: SetStateAction<Booking[] | null>) => void;
 }
 
 const bookingStatusText = new Map([
@@ -37,13 +37,11 @@ const bookingStatusColor = new Map([
     ["CANCELED", "text-rose-600"]
 ])
 
-export default function BookingHistoryCard({booking, setBooking}: BookingHistoryCardProps) {
-    const [isDisabled, setDisabled] = useState(true)
+export default function BookingHistoryCard({booking}: BookingHistoryCardProps) {
     const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
-    const [isLoading, setLoading] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition()
-    const [isCanceled, setIsCanceled] = useState(false)
+    const router = useRouter()
     
     const [bookingStartDate, bookingStartTime] = new Date(booking.bookingStart).toLocaleString().split(", ")
     const parsedBookingStart = `${bookingStartDate} ${bookingStartTime.substring(0, 5)}`
@@ -51,6 +49,33 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
     const [bookingEndDate, bookingEndTime] = new Date(booking.bookingEnd).toLocaleString().split(", ")
     const parsedBookingEnd = `${bookingEndDate} ${bookingEndTime.substring(0, 5)}`
     
+    const checkPayment = () => {
+        startTransition(async () => {
+            await axiosInstance({
+				method: "POST",
+				url: "/api/payment/checkout",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				data: { bookingId: booking.id }
+			}).then(function (response: AxiosResponse<any, any>) {
+				setSuccess(() => {return response.data.message})
+                if (response.data.message === "Совершите платеж.") {
+                    router.replace(response.data.data.confirmUrl)
+                    return
+                }
+				window.location.reload()
+			}).catch((error) => {
+                console.log(error)
+				if (error.response) {
+                    setError(error.response.data.message)
+                    return
+                }
+                setError("Ошибка.")
+			})
+        })
+    }
+
     const form = useForm<z.infer<typeof bookingSchema>>({
 		resolver: zodResolver(bookingSchema),
 		defaultValues: {
@@ -60,31 +85,6 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
             parkingId: booking?.parking.id,
 		},
 	});
-    
-    const onSubmit = (values: z.infer<typeof bookingSchema>) => {
-        setDisabled(() => {return true})
-		setError("");
-		setSuccess("");
-		setLoading(() => {return true});
-
-		startTransition(async () => {
-			
-			await axiosInstance({
-				method: "POST",
-				url: "/api/booking/update",
-				headers: {
-					"Content-Type": "application/json"
-				}
-			}).then(function (response: AxiosResponse<any, any>) {
-				setSuccess(response.data.message)
-				setLoading(() => {return false});
-			}).catch((error) => {
-				setLoading(() => {return false});
-				setError(error.response.data.message)
-			})
-
-		});
-	};
     return (
         <div className="">
             <Accordion className="" collapseAll>
@@ -113,7 +113,6 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
                     <Accordion.Content>
                         <Form {...form}>
                             <form 
-                                onSubmit={form.handleSubmit(onSubmit)}
                                 className="space-y-6"
                             >
                                 <div className="space-y-4">
@@ -214,16 +213,16 @@ export default function BookingHistoryCard({booking, setBooking}: BookingHistory
                                 <FormSuccess message={success} />
                             </form>
                         </Form>
-                        {isDisabled && 
-                            <div className="flex w-full gap-4 mt-4">
-                                {booking.status==="CREATED" && <Button variant="secondary" className="bg-lime-500 hover:bg-lime-500/50">Оплатить</Button>}
-                                <DeleteBookingButton id={booking.id} setError={setError} setSuccess={setSuccess} setLoading={setLoading} setBooking={setBooking}>
+                        <div className="flex w-full gap-4 mt-4">
+                            {booking.status==="CREATED" && <Button onClick={checkPayment} disabled={isPending} variant="secondary" className="bg-lime-500 hover:bg-lime-500/50">Проверить платеж</Button>}
+                            {booking.status != "CANCELED" && booking.status != "ARCHIVED" && (
+                                <DeleteBookingButton id={booking.id} setError={setError} setSuccess={setSuccess}>
                                     <Button variant="destructive">
                                         Отменить бронь
                                     </Button>
                                 </DeleteBookingButton>
-                            </div>
-                        }
+                            )}
+                        </div>
                     </Accordion.Content>
                 </Accordion.Panel>
             </Accordion>

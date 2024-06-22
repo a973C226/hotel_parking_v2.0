@@ -32,6 +32,22 @@ export const checkPaymentAction = async (bookingId: string) => {
             }
         }).then((response) => {
             const respData = response.data
+            if (respData.status === "canceled") {
+                const updatePaymentInfo = {
+                    status: respData.status,
+                    amount: respData.amount.value,
+                    currency: respData.amount.currency,
+                    paid: respData.paid
+                }
+                const res = updatePaymentById(payment.id, updatePaymentInfo)
+                if (!res) {
+                    return { success: false, result: "Ошибка обновления платежа. Платеж не прошел или отменен." };
+                }
+                return { success: false, result: "Платеж не прошел или отменен." };
+            }
+            if (respData.status === "pending") {
+                return { success: false, result: "Платеж не совершен." };
+            }
             const updatePaymentInfo = {
                 status: respData.status,
                 amount: respData.income_amount.value,
@@ -52,7 +68,10 @@ export const checkPaymentAction = async (bookingId: string) => {
             return { success: false, result: "Ошибка проверки платежа." }
         })
         if (!response.success) {
-            return { success: false, result: "Ошибка проверки платежа." }
+            if (response.result === "Платеж не совершен.") {
+                return { success: false, result: response.result, confirmUrl: payment.confirmation_url }
+            }
+            return { success: false, result: response.result }
         }
         const resUpdBooking = updateBookingById(bookingId, {status: BookingStatus.PAID})
         if (!resUpdBooking) {

@@ -109,12 +109,3 @@ model Payment {
 	booking				Booking @relation(fields: [bookingId], references: [id])
 	bookingId			String
 }
-
-
-// model FreeQuotas {
-// 	id                String @id @default(cuid())
-// 	parking           Parking @relation(fields: [parkingId], references: [id])
-// 	parkingId         String @unique
-// 	dateActiveQoutas  DateTime
-// 	freeQuotasNumber  Int
-// }

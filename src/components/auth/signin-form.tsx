@@ -63,7 +63,7 @@ export const SignInForm = () => {
 				localStorage.setItem('refresh-token', resData["X-Refresh-Token"]);
 				setSuccess(response.data.message)
 				if (!resData["isFirstLogin"]) {
-					return router.push(callbackUrl || "/profile")
+					return router.push(callbackUrl || "/dashboard")
 				}
 				return router.push("/profile/personal-info")
 			}

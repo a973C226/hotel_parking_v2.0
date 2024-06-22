@@ -1,4 +1,4 @@
-import { checkPaymentAction } from "@/lib/actions/payment/checkPaymentAction";
+import { cancelBookingAction } from "@/lib/actions/booking/cancelBookingAction";
 import { statusCode } from "@/lib/constants/statusCode";
 import { logger } from "@/lib/logger";
 import { isVerifiedToken } from "@/lib/utils/auth";
@@ -17,64 +17,57 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                         Accept: "application/json"
                     }
                 },
-            );
+            )
         }
 
-        const body = await request.json()
-        const actionResult = await checkPaymentAction(body.bookingId)
+        const body = await request.json();
 
+        const actionResult = await cancelBookingAction({
+            ...body,
+            userId: session.id as string
+        })
         if (!actionResult.success) {
-            if (actionResult.confirmUrl) {
-                return new NextResponse(
-                    JSON.stringify({ message: `Совершите платеж.`, data: {confirmUrl: actionResult.confirmUrl} }), 
-                    { 
-                        status: statusCode.StatusOK,
-                        headers: { 
-                            "Content-Type": "application/json",
-                            Accept: "application/json"
-                        }
-                    }
-                );
-            }
-            logger.log({
-                level: "error",
-                message: `[ApiError "POST api/payment/checkout"]: ${ actionResult.result }`,
-            });
             return new NextResponse(
-                JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
-                { 
-                    status: statusCode.StatusBadRequest,
+                JSON.stringify({ message: actionResult.result }), 
+                {
+                    status: statusCode.StatusBadRequest,  
                     headers: { 
                         "Content-Type": "application/json",
                         Accept: "application/json"
                     }
-                }
-            );
+                },
+            )
         }
+
         return new NextResponse(
-            JSON.stringify({ message: actionResult.result }), 
+            JSON.stringify({ 
+                message: actionResult.result,
+                data: actionResult.result
+            }),
             { 
                 status: statusCode.StatusOK,
                 headers: { 
                     "Content-Type": "application/json",
                     Accept: "application/json"
                 }
-            }
-        );
-    } catch(error) {
+            },
+        )
+    } catch (err) {
         logger.log({
             level: "error",
-            message: `[ApiError "POST api/payment/checkout"]: ${ error }`,
-        });
+            message: `[ApiError "/api/booking/cancel"]: ${err}`
+        })
         return new NextResponse(
-            JSON.stringify({ message: `Что-то пошло не так, обратитесь в техподдержку.` }), 
+            JSON.stringify({ 
+                message: "Ошибка отмены брони."
+            }),
             { 
                 status: statusCode.StatusInternalServerError,
                 headers: { 
                     "Content-Type": "application/json",
                     Accept: "application/json"
                 }
-            }
-        );
+            },
+        )
     }
 }

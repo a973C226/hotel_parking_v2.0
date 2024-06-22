@@ -6,14 +6,14 @@ import { useUserTransport } from "@/hooks/use-user-transport";
 import { Spinner } from "flowbite-react";
 
 export default function BookingHistory() {
-    const [userBookings, setUserBooking]: any = useUserBookings()
+    const [userBookings, _]: any = useUserBookings()
 
     return (
         <div>
             {userBookings!=null &&
                 <div className="flex flex-col gap-4">
                     {userBookings.map((booking: Booking) => (
-                        <BookingHistoryCard booking={booking} setBooking={setUserBooking}/>
+                        <BookingHistoryCard booking={booking}/>
                     ))}
                     {userBookings.length==0 && <div className="text-center">Бронирований нет</div>}
                 </div>
