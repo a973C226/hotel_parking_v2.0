@@ -45,7 +45,8 @@ export const signInAction = async (body: User): Promise<{
         const result = {
             accessToken: accessToken,
             refreshToken: refreshToken,
-            isFirstLogin: existingUser.isFirstLogin
+            isFirstLogin: existingUser.isFirstLogin,
+            role: existingUser.role
         }
         
         return { success: true, result: result }

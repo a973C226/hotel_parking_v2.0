@@ -1,0 +1,356 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastname": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "middlename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "birthdate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "gender": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phoneNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "default": "GUEST",
+          "enum": [
+            "ADMIN",
+            "GUEST",
+            "BUSiNESS_USER"
+          ]
+        },
+        "email": {
+          "type": "string"
+        },
+        "emailVerified": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "image": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "password": {
+          "type": "string"
+        },
+        "isFirstLogin": {
+          "type": "boolean",
+          "default": true
+        },
+        "verificationToken": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VerificationToken"
+          }
+        },
+        "transports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transport"
+          }
+        },
+        "bookings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Booking"
+          }
+        },
+        "payments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Payment"
+          }
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "VerificationToken": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "token"
+      ]
+    },
+    "Transport": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "licensePlate": {
+          "type": "string"
+        },
+        "owner": {
+          "$ref": "#/definitions/User"
+        },
+        "brand": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "booking": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Booking"
+          }
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "licensePlate",
+        "userId"
+      ]
+    },
+    "Parking": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parkingName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "parkingSpaces": {
+          "type": "integer"
+        },
+        "pricePerQuota": {
+          "type": "number"
+        },
+        "coord_x": {
+          "type": "number"
+        },
+        "coord_y": {
+          "type": "number"
+        },
+        "booking": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Booking"
+          }
+        }
+      },
+      "required": [
+        "parkingName",
+        "description",
+        "parkingSpaces",
+        "pricePerQuota",
+        "coord_x",
+        "coord_y"
+      ]
+    },
+    "Booking": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "default": "CREATED",
+          "enum": [
+            "CREATED",
+            "PAID",
+            "CANCELED",
+            "ARCHIVED"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bookingStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bookingEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bookingQuotas": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "payment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Payment"
+          }
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "transport": {
+          "$ref": "#/definitions/Transport"
+        },
+        "parking": {
+          "$ref": "#/definitions/Parking"
+        }
+      },
+      "required": [
+        "bookingStart",
+        "bookingEnd",
+        "bookingQuotas",
+        "cost",
+        "userId",
+        "transportId",
+        "parkingId"
+      ]
+    },
+    "Payment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "paymentId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "confirmation_url": {
+          "type": "string"
+        },
+        "paid": {
+          "type": "boolean"
+        },
+        "booking": {
+          "$ref": "#/definitions/Booking"
+        }
+      },
+      "required": [
+        "paymentId",
+        "status",
+        "amount",
+        "currency",
+        "description",
+        "userId",
+        "created_at",
+        "confirmation_url",
+        "paid",
+        "bookingId"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "verificationToken": {
+      "$ref": "#/definitions/VerificationToken"
+    },
+    "transport": {
+      "$ref": "#/definitions/Transport"
+    },
+    "parking": {
+      "$ref": "#/definitions/Parking"
+    },
+    "booking": {
+      "$ref": "#/definitions/Booking"
+    },
+    "payment": {
+      "$ref": "#/definitions/Payment"
+    }
+  }
+}

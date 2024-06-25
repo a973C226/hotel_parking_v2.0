@@ -49,7 +49,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 data: {
                     "X-Auth-Token": actionResult.result.accessToken,
                     "X-Refresh-Token": actionResult.result.refreshToken,
-                    "isFirstLogin": actionResult.result.isFirstLogin
+                    "isFirstLogin": actionResult.result.isFirstLogin,
+                    "role": actionResult.result.role
                 }
              }), 
             {

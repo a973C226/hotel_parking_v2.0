@@ -62,6 +62,12 @@ export const SignInForm = () => {
 				localStorage.setItem('access-token', resData["X-Auth-Token"]);
 				localStorage.setItem('refresh-token', resData["X-Refresh-Token"]);
 				setSuccess(response.data.message)
+				if (resData["role"] === "ADMIN") {
+					return router.push("/admin/dashboard")
+				}
+				if (resData["role"] === "BUSiNESS_USER") {
+					return router.push("/business-user/dashboard")
+				}
 				if (!resData["isFirstLogin"]) {
 					return router.push(callbackUrl || "/dashboard")
 				}

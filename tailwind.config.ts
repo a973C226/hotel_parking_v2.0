@@ -9,7 +9,9 @@ const config = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
 	  flowbite.content(),
+    "./node_modules/@premieroctet/next-admin/dist/**/*.{js,ts,jsx,tsx}",
 	],
+  presets: [require("@premieroctet/next-admin/dist/preset")],
   prefix: "",
   theme: {
     screens: {
