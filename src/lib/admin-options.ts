@@ -382,8 +382,8 @@ export const options: NextAdminOptions = {
 		}
 	},
 	pages: {
-		"/custom": {
-			title: "Статистика",
+		"/dashboard": {
+			title: "Панель",
 			icon: "PresentationChartBarIcon",
 		},
 	},
@@ -395,5 +395,5 @@ export const options: NextAdminOptions = {
 			},
 		],
 	},
-	defaultColorScheme: "dark",
+	defaultColorScheme: "light",
 };

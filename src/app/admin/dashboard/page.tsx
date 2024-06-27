@@ -1,18 +1,26 @@
-
 import { MainLayout } from "@premieroctet/next-admin";
 import { getMainLayoutProps } from "@premieroctet/next-admin/dist/mainLayout";
 import { options } from "@/lib/admin-options";
 import { db } from "@/lib/db";
 
 const AdminDashboardPage = async () => {
+
   const mainLayoutProps = getMainLayoutProps({
     options,
     isAppDir: true,
   });
   const totalUsers = await db.user.count();
+  const totalTransport = await db.transport.count();
+  const totalParking = await db.parking.count();
+  const totalBooking = await db.booking.count();
+  const totalPayment = await db.payment.count();
 
   const stats = [
-    { name: "Total Users", stat: totalUsers },
+    { name: "Пользователи", stat: totalUsers },
+    { name: "Транспортные средства", stat: totalTransport },
+    { name: "Парковки", stat: totalParking },
+    { name: "Бронирования", stat: totalBooking },
+    { name: "Платежи", stat: totalPayment },
   ];
 
   return (
@@ -20,9 +28,9 @@ const AdminDashboardPage = async () => {
       {...mainLayoutProps}
       user={{
         data: {
-          name: "USer",
+          name: "Администратор",
         },
-        logoutUrl: "/",
+        logoutUrl: "/auth/sign-in",
       }}
     >
       <div className="p-10">
@@ -32,30 +40,16 @@ const AdminDashboardPage = async () => {
         <div className="mt-2">
           <div>
             <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow dark:bg-gray-800 sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Users
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-                  {totalUsers}
-                </dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow dark:bg-gray-800 sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Posts
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-                  59
-                </dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow dark:bg-gray-800 sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Categories
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-                  1
-                </dd>
-              </div>
+              {stats.map(stat => (
+                <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow dark:bg-gray-800 sm:p-6">
+                  <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {stat.name}
+                  </dt>
+                  <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
+                    {stat.stat}
+                  </dd>
+                </div>
+              ))}
             </dl>
           </div>
         </div>

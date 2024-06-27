@@ -115,7 +115,7 @@ export const BusinessUserOptions: NextAdminOptions = {
 		},
 		Transport: {
 			toString: (transport) => `${transport.brand} ${transport.model} ${transport.licensePlate}`,
-			permissions: ["edit", "delete", "create"],
+			permissions: [],
 			title: "Транспортные средства",
 			icon: "TruckIcon",
 			aliases: {
@@ -225,7 +225,7 @@ export const BusinessUserOptions: NextAdminOptions = {
 		},
 		Booking: {
 			toString: (booking) => `${booking.bookingStart} - ${booking.bookingEnd}`,
-			permissions: ["edit", "delete", "create"],
+			permissions: [],
 			title: "Бронирования",
 			icon: "BookmarkIcon",
 			aliases: {
@@ -395,5 +395,5 @@ export const BusinessUserOptions: NextAdminOptions = {
 			},
 		],
 	},
-	defaultColorScheme: "dark",
+	defaultColorScheme: "light",
 };
